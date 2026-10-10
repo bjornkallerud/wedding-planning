@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Soraya &amp; Bjorn Day-Of Plan</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one reading column with a sticky tab bar; each tab leads with what needs action, then detail */
+:root{
+  --bg:#f5f7f4; --surface:#ffffff; --fg:#1f2a24; --muted:#5e6b63; --line:#d9e0da;
+  --accent:#2f6b4f; --bluff:#2c5f86; --gh:#2f6b4f; --move:#8a5a12; --warn-bg:#fbf3e4; --warn:#8a5a12; --ok-bg:#e8f2ec;
+  --add:#2f6b4f; --rem:#a3392f;
+  --chip-bluff:#e3edf5; --chip-gh:#e2efe7; --chip-move:#f6ead6; --chip-off:#ececec; --chip-rem:#f7e3e0;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a17; --surface:#1b231f; --fg:#e4ebe6; --muted:#9aa89f; --line:#2c3832;
+  --accent:#7cc39e; --bluff:#86b7dc; --gh:#7cc39e; --move:#e2b56a; --warn-bg:#2a2317; --warn:#e2b56a; --ok-bg:#1c2a22;
+  --add:#7cc39e; --rem:#ec8a7f;
+  --chip-bluff:#1e3142; --chip-gh:#1d3328; --chip-move:#3a2e1a; --chip-off:#2a2f2c; --chip-rem:#3a201d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a17; --surface:#1b231f; --fg:#e4ebe6; --muted:#9aa89f; --line:#2c3832;
+  --accent:#7cc39e; --bluff:#86b7dc; --gh:#7cc39e; --move:#e2b56a; --warn-bg:#2a2317; --warn:#e2b56a; --ok-bg:#1c2a22;
+  --add:#7cc39e; --rem:#ec8a7f;
+  --chip-bluff:#1e3142; --chip-gh:#1d3328; --chip-move:#3a2e1a; --chip-off:#2a2f2c; --chip-rem:#3a201d; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1000px;margin:0 auto;padding-inline:20px;padding-block:28px 72px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(28px,5vw,40px)}
+h2{font-size:22px}
+h3{font-size:17px}
+p{margin:0;max-width:70ch}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+header{display:flex;flex-direction:column;gap:8px}
+.meta{color:var(--muted);font-size:14px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:4px;overflow-x:auto;padding-block:8px;margin-inline:-20px;padding-inline:20px}
+nav.tabs button{font:600 14px var(--body);color:var(--muted);background:transparent;border:1px solid transparent;border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--fg)}
+nav.tabs button[aria-selected="true"]{color:var(--fg);background:var(--surface);border-color:var(--line)}
+nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{display:flex;flex-direction:column;gap:36px}
+.panel[hidden]{display:none}
+section{display:flex;flex-direction:column;gap:14px}
+.dates{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.date{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.date b{font-family:var(--display);font-size:17px}
+.date span{color:var(--muted);font-size:13px}
+.issues{display:grid;gap:10px}
+.issue{background:var(--warn-bg);border-left:3px solid var(--warn);padding:12px 14px;border-radius:4px;display:flex;flex-direction:column;gap:4px}
+.issue.ok{background:var(--ok-bg);border-left-color:var(--accent)}
+.locs{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;align-items:start}
+.loc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.loc h3{display:flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.dot.bluff{background:var(--bluff)} .dot.gh{background:var(--gh)} .dot.move{background:var(--move)} .dot.off{background:var(--muted)}
+.loc ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.loc li{display:grid;grid-template-columns:3.4em 1fr;gap:8px;align-items:baseline}
+.q{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--accent);font-size:14px}
+.n{color:var(--muted);font-size:13px;display:block}
+.spot{font-weight:600;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-top:6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+th.num{font-family:var(--body)}
+tr.group td{background:var(--bg);font-weight:600;font-family:var(--display);font-size:15px}
+tr.total td{font-weight:600}
+.chip{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.chip.bluff{background:var(--chip-bluff);color:var(--bluff)}
+.chip.gh{background:var(--chip-gh);color:var(--gh)}
+.chip.move{background:var(--chip-move);color:var(--move)}
+.chip.off{background:var(--chip-off);color:var(--muted)}
+.chip.add{background:var(--chip-gh);color:var(--add)}
+.chip.rem{background:var(--chip-rem);color:var(--rem)}
+s{color:var(--muted)}
+.muted{color:var(--muted)}
+.seat{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.seat div{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:var(--surface);display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.seat b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.steps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.steps li{display:grid;grid-template-columns:8.5em 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps .t{font-family:var(--mono);font-size:13px;color:var(--accent);font-variant-numeric:tabular-nums}
+.recipes{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;align-items:start}
+.recipe{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.recipe ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.stat{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.stat b{font-family:var(--mono);color:var(--fg);font-weight:500;font-size:15px;display:block}
+footer{color:var(--muted);font-size:13px}
+@media (max-width:520px){.steps li{grid-template-columns:1fr;gap:2px}}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">Dos Pueblos Orchid Farm · Sat Oct 24, 2026 · 3 to 10 pm, out by 11</span>
+  <h1>Soraya &amp; Bjorn: rentals, bar, and day-of plan</h1>
+  <p class="meta">140 guests. Ceremony and cocktail hour on the bluff (beer and wine), reception in the greenhouse (full bar with two signature cocktails). Rentals come from our Tent Merchant order and the items shared with Thomas &amp; Jocelyn.</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button role="tab" id="tab-overview" aria-controls="overview" aria-selected="true">Overview</button>
+  <button role="tab" id="tab-placement" aria-controls="placement" aria-selected="false">Placement</button>
+  <button role="tab" id="tab-alcohol" aria-controls="alcohol" aria-selected="false">Alcohol</button>
+  <button role="tab" id="tab-order" aria-controls="order" aria-selected="false">To order</button>
+  <button role="tab" id="tab-inventory" aria-controls="inventory" aria-selected="false">Rental inventory</button>
+</nav>
+
+<!-- ============ OVERVIEW ============ -->
+<div class="panel" id="overview" role="tabpanel" aria-labelledby="tab-overview">
+  <section>
+    <h2>Deadlines</h2>
+    <div class="dates">
+      <div class="date"><b>Thu Oct 15, noon</b><span>Tent Merchant final revisions and $2,762 balance</span></div>
+      <div class="date"><b>Sat Oct 17</b><span>Final diagram to Tent Merchant</span></div>
+      <div class="date"><b>Sat Oct 24, 8 am to noon</b><span>Tent Merchant delivery and set-up; BevMo delivery</span></div>
+      <div class="date"><b>Sun Oct 25, 9:30 am</b><span>SPARK lighting strike</span></div>
+      <div class="date"><b>Mon Oct 26, 8 am to 5 pm</b><span>Tent Merchant pick-up</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Tent Merchant revision (send by Oct 15)</h2>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Change</th><th class="num">Qty</th><th class="num">Est.</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip add">Add</span> Fruitwood folding chairs</td><td class="num">35</td><td class="num">+$138</td><td>Ceremony needs 140; dinner needs 140 with 105 shared crossbacks. Price assumes the $3.95 wood chair from their June quote.</td></tr>
+        <tr><td><span class="chip add">Add</span> Olive king drape</td><td class="num">1</td><td class="num">+$45</td><td>16 dining tables (13 shared + 3 Tent Merchant), 15 drapes on order.</td></tr>
+        <tr><td><span class="chip rem">Remove</span> Olive 120" round linens</td><td class="num">10</td><td class="num">-$315</td><td>Shared cocktail tables come with cloths.</td></tr>
+        <tr><td><span class="chip rem">Remove</span> Olive king drape, bar front</td><td class="num">1</td><td class="num">-$45</td><td>Bluff bar is the shared welcome table, already draped.</td></tr>
+        <tr><td><span class="chip rem">Remove</span> Olive 8' drape, bar back</td><td class="num">1</td><td class="num">-$40</td><td>No back bar on the bluff; it is beer and wine only.</td></tr>
+        <tr><td><span class="chip off">Keep</span> Double old fashioned glasses</td><td class="num">250</td><td class="num">$0</td><td>Needed for the cocktails at the reception bar.</td></tr>
+        <tr class="total"><td>Net change before service fee and fuel</td><td class="num"></td><td class="num">about -$217</td><td>Tell them the 35 chairs set up on the bluff.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Run of the day</h2>
+    <ul class="steps">
+      <li><span class="t">Morning</span><span>Reset the greenhouse after Thomas &amp; Jocelyn's night: arrange the 13 shared tables to our layout, clear their trash, check the shared cloths.</span></li>
+      <li><span class="t">8 am to noon</span><span>Tent Merchant delivers and sets: buffet, beverage stations, 4 dining tables, 35 chairs on the bluff, linens, glassware racks, kitchen gear.</span></li>
+      <li><span class="t">Before noon</span><span>BevMo delivers beer and spirits. Wine (50 bottles) comes with us. Get beer and white wine into coolers.</span></li>
+      <li><span class="t">Midday</span><span>Pre-set dinner tables: drapes, napkins, forks, knives, water and wine goblets. Set up both bars. Ice arrives close to start.</span></li>
+      <li><span class="t">3 pm</span><span>Guests arrive.</span></li>
+      <li><span class="t">3:30 to 4:15</span><span>Ceremony on the bluff on 140 fruitwood chairs.</span></li>
+      <li><span class="t">4:15 to 5:15</span><span>Cocktail hour: beer, wine, and N/A on the bluff with charcuterie. Move crew brings chairs and tables up to the greenhouse (see Placement).</span></li>
+      <li><span class="t">5:15 to 6</span><span>Walk to the greenhouse; full bar opens. Family photos.</span></li>
+      <li><span class="t">6 to 8</span><span>Buffet dinner, speeches, aquavit toast, cake, coffee.</span></li>
+      <li><span class="t">8 to 10</span><span>First dances, then dancing. Music ends at 10.</span></li>
+      <li><span class="t">10 to 11</span><span>Out by 11. Rinse glassware into racks, bag linens dry, stack Tent Merchant tables and chairs, take leftover alcohol home.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Open questions</h2>
+    <div class="issues">
+      <div class="issue"><strong>Move crew</strong><p>Who carries 35 chairs, 5 cocktail tables, the card table, 2 trash cans, and the bluff coolers up during cocktail hour?</p></div>
+      <div class="issue"><strong>Greenhouse reset Saturday morning</strong><p>Who re-arranges the shared tables to our layout and clears Friday's trash before Tent Merchant arrives?</p></div>
+      <div class="issue"><strong>DJ's Catering</strong><p>Do the shared cocktail table cloths get swapped after Friday? Are the back bar tables on the Toscano bar draped? Does the $275 trash haul (billed to T&amp;J) cover our night too?</p></div>
+      <div class="issue"><strong>Katherine (catering)</strong><p>Who provides charcuterie boards, coffee, cream and sugar, and the cake knife? Who staffs and batches the bar?</p></div>
+      <div class="issue"><strong>BevMo delivery</strong><p>Who receives it before noon, and where is it stored until the bars open?</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PLACEMENT ============ -->
+<div class="panel" id="placement" role="tabpanel" aria-labelledby="tab-placement" hidden>
+  <section>
+    <h2>Where everything goes</h2>
+    <div class="locs">
+      <div class="loc">
+        <h3><span class="dot bluff"></span>Ceremony bluff</h3>
+        <div class="spot">Ceremony</div>
+        <ul>
+          <li><span class="q">105</span><span>Fruitwood folding chairs <span class="n">Shared</span></span></li>
+          <li><span class="q">35</span><span>Fruitwood folding chairs <span class="n">Tent Merchant (adding). 140 total; the 45-chair move on the old diagram is no longer needed</span></span></li>
+        </ul>
+        <div class="spot">Bar (umbrella spot): beer and wine</div>
+        <ul>
+          <li><span class="q">1</span><span>Welcome beverage table <span class="n">Shared, comes draped. This is the bar</span></span></li>
+          <li><span class="q">1</span><span>Cloth market umbrella <span class="n">Shared</span></span></li>
+          <li><span class="q">100</span><span>Wine goblets, 12 oz <span class="n">Tent Merchant, 4 racks. Beer served in the bottle or can</span></span></li>
+          <li><span class="q">2-3</span><span>Coolers or tubs with ice <span class="n">Beer, white wine, N/A beer, sparkling water (to order)</span></span></li>
+          <li><span class="q">1</span><span>Lemonade and sparkling water <span class="n">From the alcohol plan, on the bar</span></span></li>
+        </ul>
+        <div class="spot">Charcuterie (next to the bar)</div>
+        <ul>
+          <li><span class="q">1</span><span>6' place card table with drape <span class="n">Shared. Place cards go on a sign instead</span></span></li>
+        </ul>
+        <div class="spot">Cocktail area</div>
+        <ul>
+          <li><span class="q">5</span><span>Pedestal cocktail tables with cloth <span class="n">Shared. Move to the greenhouse after</span></span></li>
+          <li><span class="q">1</span><span>6' card table with drape <span class="n">Shared gift table. Moves to the greenhouse entry after</span></span></li>
+          <li><span class="q">1</span><span>6' DJ table with drape <span class="n">Shared. Stays</span></span></li>
+          <li><span class="q">2</span><span>Trash cans: bar and cocktail area <span class="n">Shared. Move to the greenhouse after</span></span></li>
+          <li><span class="q">1</span><span>Recycling bin at the bar <span class="n">Bottles and cans (to order)</span></span></li>
+        </ul>
+      </div>
+
+      <div class="loc">
+        <h3><span class="dot gh"></span>Greenhouse reception</h3>
+        <div class="spot">Dining (tables 1 to 9)</div>
+        <ul>
+          <li><span class="q">16</span><span>8' banquet tables <span class="n">13 shared + 3 Tent Merchant</span></span></li>
+          <li><span class="q">16</span><span>Olive king drapes, pooled <span class="n">15 on order + 1 adding</span></span></li>
+          <li><span class="q">140</span><span>Chairs <span class="n">105 shared crossbacks + 35 fruitwood from the bluff</span></span></li>
+          <li><span class="q">155</span><span>White napkins, pre-set</span></li>
+          <li><span class="q">155</span><span>Hammered dinner forks, pre-set</span></li>
+          <li><span class="q">155</span><span>Hammered dinner knives, pre-set</span></li>
+          <li><span class="q">175</span><span>Water goblets, 16.5 oz, pre-set</span></li>
+          <li><span class="q">250</span><span>Wine goblets, 12 oz, pre-set and bar</span></li>
+        </ul>
+        <div class="spot">Buffet (west wall)</div>
+        <ul>
+          <li><span class="q">3</span><span>8' banquet tables, olive full-drop drapes <span class="n">Tent Merchant</span></span></li>
+          <li><span class="q">150</span><span>Lisbon dinner plates, stacked at the head</span></li>
+        </ul>
+        <div class="spot">Beverage stations (next to the buffet)</div>
+        <ul>
+          <li><span class="q">2</span><span>6' tables, olive full-drop drapes <span class="n">Tent Merchant. Add to the diagram</span></span></li>
+          <li><span class="q">3</span><span>Heritage 3 gal dispensers on Tuscan crate risers <span class="n">Water, lemonade, N/A margarita</span></span></li>
+        </ul>
+        <div class="spot">Bar (north wall): full bar</div>
+        <ul>
+          <li><span class="q">1</span><span>Toscano wood bar with back bar tables <span class="n">Shared</span></span></li>
+          <li><span class="q">250</span><span>Double old fashioned glasses <span class="n">Tent Merchant. Both signature cocktails</span></span></li>
+          <li><span class="q">2-3</span><span>Coolers or tubs behind the bar <span class="n">Beer and wine coming up from the bluff</span></span></li>
+          <li><span class="q">1</span><span>Recycling bin <span class="n">To order</span></span></li>
+        </ul>
+        <div class="spot">Coffee and dessert (northeast corner)</div>
+        <ul>
+          <li><span class="q">1</span><span>Coffee table <span class="n">Shared, comes draped</span></span></li>
+          <li><span class="q">1</span><span>100-cup coffee urn <span class="n">Tent Merchant</span></span></li>
+          <li><span class="q">1</span><span>36" round cake table with cloth <span class="n">Shared</span></span></li>
+          <li><span class="q">72</span><span>Margarita glasses <span class="n">Tent Merchant, listed for dessert service</span></span></li>
+          <li><span class="q">~</span><span>Compostable cups, cake plates, forks <span class="n">To order</span></span></li>
+        </ul>
+        <div class="spot">Guest entry (south)</div>
+        <ul>
+          <li><span class="q">1</span><span>Card table <span class="n">Arrives from the bluff</span></span></li>
+          <li><span class="q">1</span><span>Place card sign on an easel</span></li>
+          <li><span class="q">5</span><span>Cocktail tables <span class="n">Arrive from the bluff; open floor by the entry</span></span></li>
+        </ul>
+        <div class="spot">Through the room</div>
+        <ul>
+          <li><span class="q">28</span><span>Oak dance floor pieces, center <span class="n">Shared, fixed</span></span></li>
+          <li><span class="q">6</span><span>Heat lamps <span class="n">Shared</span></span></li>
+          <li><span class="q">4</span><span>Trash cans: bar, buffet, coffee, entry <span class="n">2 here from the start, 2 from the bluff</span></span></li>
+          <li><span class="q">1</span><span>Compost bin by coffee and dessert <span class="n">To order</span></span></li>
+        </ul>
+      </div>
+
+      <div class="loc">
+        <h3><span class="dot move"></span>Moves during cocktail hour</h3>
+        <ul>
+          <li><span class="q">35</span><span>Fruitwood chairs, bluff to dining</span></li>
+          <li><span class="q">5</span><span>Cocktail tables, bluff to greenhouse entry</span></li>
+          <li><span class="q">1</span><span>Card table, bluff to greenhouse entry</span></li>
+          <li><span class="q">2</span><span>Trash cans, bluff to greenhouse</span></li>
+          <li><span class="q">~</span><span>Coolers, leftover beer and wine, wine goblet racks, bluff to greenhouse bar</span></li>
+        </ul>
+        <p class="muted">Stays on the bluff: 105 shared fruitwood chairs, the bar table, umbrella, charcuterie table, and DJ table.</p>
+      </div>
+
+      <div class="loc">
+        <h3><span class="dot off"></span>Caterer kitchen</h3>
+        <ul>
+          <li><span class="q">1</span><span>72" griddle with 2 propane tanks <span class="n">Return drip trays or lose the $30 cleaning deposit</span></span></li>
+          <li><span class="q">1</span><span>Electric transit warming box</span></li>
+          <li><span class="q">10</span><span>Sheet pans, 18" x 26"</span></li>
+          <li><span class="q">2</span><span>50' extension cords</span></li>
+        </ul>
+      </div>
+
+      <div class="loc">
+        <h3><span class="dot off"></span>Installed by SPARK</h3>
+        <ul>
+          <li><span class="q">1</span><span>Conservatory string lights, path to restrooms</span></li>
+          <li><span class="q">1</span><span>Chiffon swag at the greenhouse entry</span></li>
+          <li><span class="q">7</span><span>Canopy string light runs, dimmable</span></li>
+          <li><span class="q">1</span><span>Bar downlighting</span></li>
+          <li><span class="q">15</span><span>Paper lanterns over the dance floor</span></li>
+          <li><span class="q">4</span><span>Uplights on the entry drape and foliage</span></li>
+        </ul>
+        <p class="muted">Installed Oct 22, struck Oct 25. Nothing to place.</p>
+      </div>
+
+      <div class="loc">
+        <h3><span class="dot off"></span>Teardown for Monday pick-up</h3>
+        <ul>
+          <li><span class="q">✓</span><span>Rinse all plates, flatware, and glasses back into their racks <span class="n">Dirty returns are billed extra</span></span></li>
+          <li><span class="q">✓</span><span>Shake out linens and bag them dry <span class="n">Wet or stained linens are billed</span></span></li>
+          <li><span class="q">✓</span><span>Stack Tent Merchant tables and chairs where they were delivered</span></li>
+          <li><span class="q">✓</span><span>Take leftover alcohol, coolers, and signs home</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Seat count</h2>
+    <p class="muted">From the seating chart: 140 seats at 16 tables.</p>
+    <div class="seat">
+      <div>Table 1 (4 tables)<b>35</b></div>
+      <div>Table 2 (2)<b>16</b></div>
+      <div>Table 3 (2)<b>18</b></div>
+      <div>Table 4 (2)<b>17</b></div>
+      <div>Tables 5 + 6<b>18</b></div>
+      <div>Tables 7 + 8<b>20</b></div>
+      <div>Table 9 (2)<b>16</b></div>
+      <div><strong>Total</strong><b>140</b></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ALCOHOL ============ -->
+<div class="panel" id="alcohol" role="tabpanel" aria-labelledby="tab-alcohol" hidden>
+  <section>
+    <h2>The plan</h2>
+    <div class="locs">
+      <div class="loc">
+        <h3><span class="dot bluff"></span>Bluff, cocktail hour</h3>
+        <p>Beer, wine, N/A beer, sparkling water, and lemonade. No spirits.</p>
+        <ul>
+          <li><span class="q">2</span><span>Estrella Jalisco 24-packs (48)</span></li>
+          <li><span class="q">4</span><span>Sierra Nevada 12-packs (48)</span></li>
+          <li><span class="q">12</span><span>White wine, chilled</span></li>
+          <li><span class="q">12</span><span>Red wine</span></li>
+        </ul>
+        <p class="muted">Suggested split: about 216 drinks for an hour with 140 guests. Whatever is left goes up with the coolers.</p>
+      </div>
+      <div class="loc">
+        <h3><span class="dot gh"></span>Greenhouse, reception</h3>
+        <p>Full bar: the two signature cocktails, beer, wine, and N/A. Aquavit toast at dinner.</p>
+        <ul>
+          <li><span class="q">4</span><span>Estrella Jalisco 24-packs (96)</span></li>
+          <li><span class="q">8</span><span>Sierra Nevada 12-packs (96)</span></li>
+          <li><span class="q">13</span><span>White wine</span></li>
+          <li><span class="q">13</span><span>Red wine</span></li>
+          <li><span class="q">~</span><span>All tequila, Cointreau, and bourbon</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Signature cocktails</h2>
+    <p class="muted">Ingredients and pour sizes from the alcohol sheet. The sheet doesn't list full specs, so confirm the final build with whoever runs the bar.</p>
+    <div class="recipes">
+      <div class="recipe">
+        <h3>Moroccan Oaxacan</h3>
+        <ul>
+          <li>Cazadores Reposado tequila, 1.5 oz</li>
+          <li>Cointreau</li>
+          <li>Fresh lime juice</li>
+          <li>Simple syrup</li>
+          <li>Fresh mint, muddled and for garnish</li>
+        </ul>
+        <div class="stat"><span><b>8 × 750 ml</b>tequila bought</span><span><b>~135</b>drinks at 1.5 oz</span><span><b>2.5 L</b>Cointreau</span></div>
+        <p class="muted">At 3/4 oz Cointreau per drink, 2.5 L covers about 112 drinks; at 1/2 oz it covers all 135. 15 dozen limes yields roughly 180 oz of juice.</p>
+      </div>
+      <div class="recipe">
+        <h3>Lingonberry Old Fashioned</h3>
+        <ul>
+          <li>Bulleit bourbon, 2 oz</li>
+          <li>Lingonberry syrup or preserves</li>
+          <li>Angostura bitters</li>
+          <li>Sugar cube</li>
+          <li>Orange peel garnish</li>
+        </ul>
+        <div class="stat"><span><b>4 × 1.75 L</b>bourbon bought</span><span><b>~118</b>drinks at 2 oz</span></div>
+        <p class="muted">Lingonberry preserves: order ahead (IKEA or a specialty grocer).</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What we have</h2>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Qty</th><th class="num">Servings</th><th class="num">Cost</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="5">BevMo order BLE-4756 (from #D4411), confirmed Sep 26, delivered before noon Oct 24</td></tr>
+        <tr><td>Estrella Jalisco, 24-pack, 12 oz</td><td class="num">6</td><td class="num">144</td><td class="num">$149.94</td><td>$24.99 each</td></tr>
+        <tr><td>Sierra Nevada Pale Ale, 12-pack, 12 oz bottles</td><td class="num">12</td><td class="num">144</td><td class="num">$179.88</td><td>$14.99 each. Bottles: need openers</td></tr>
+        <tr><td>Cazadores Reposado Tequila, 750 ml</td><td class="num">8</td><td class="num">~135</td><td class="num">$132.00</td><td>Buy one, get one for 5¢ (saved $131.92)</td></tr>
+        <tr><td>Cointreau, 1.75 L</td><td class="num">1</td><td class="num"></td><td class="num">$67.99</td><td></td></tr>
+        <tr><td>Cointreau, 750 ml</td><td class="num">1</td><td class="num"></td><td class="num">$33.99</td><td></td></tr>
+        <tr><td>Bulleit Bourbon, 1.75 L</td><td class="num">4</td><td class="num">~118</td><td class="num">$187.96</td><td>$46.99 each</td></tr>
+        <tr><td>Delivery fee</td><td class="num">1</td><td class="num"></td><td class="num">$50.00</td><td></td></tr>
+        <tr><td>Tax</td><td class="num"></td><td class="num"></td><td class="num">$86.80</td><td></td></tr>
+        <tr class="total"><td>BevMo total</td><td class="num"></td><td class="num"></td><td class="num">$888.56</td><td></td></tr>
+        <tr class="group"><td colspan="5">Wine (already have)</td></tr>
+        <tr><td>White / rosé, Simi (gift)</td><td class="num">25</td><td class="num">~125</td><td class="num"></td><td>Chill before the bluff</td></tr>
+        <tr><td>Red, Simi (gift)</td><td class="num">25</td><td class="num">~125</td><td class="num"></td><td></td></tr>
+        <tr class="total"><td>All alcohol on hand</td><td class="num"></td><td class="num">~791</td><td class="num"></td><td>About 5.6 drinks per guest over ~6 hours of bar, before the toast</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="muted">Still to buy for the bar (aquavit, N/A, mixers, garnishes, tools) is on the To order tab.</p>
+  </section>
+
+  <section>
+    <h2>Is it enough?</h2>
+    <div class="issues">
+      <div class="issue ok"><strong>Yes</strong><p>The bar runs about 6 hours (4:15 to 10). The usual rule is one drink per guest per hour: 140 × 6 = 840. We have about 791 plus the aquavit toast and N/A, and the rule counts every guest as a drinker. Most weddings land closer to 4 or 5 drinks per drinker.</p></div>
+      <div class="issue ok"><strong>Beer and wine</strong><p>288 beers and 250 glasses of wine. 50 bottles is in line with the usual one bottle per 2 to 3 guests.</p></div>
+      <div class="issue ok"><strong>Cocktails</strong><p>About 253 signature cocktails (135 Oaxacan, 118 Old Fashioned), close to 2 per guest at the reception. That's roughly double the original plan of 4 bottles of each.</p></div>
+      <div class="issue"><strong>Watch: white wine</strong><p>25 bottles of white. If the bluff goes through its 12 fast on a warm afternoon, dinner has 13 left. Hold a few back for the reception.</p></div>
+      <div class="issue"><strong>Watch: Cointreau</strong><p>2.5 L covers about 112 Oaxacans at 3/4 oz or all 135 at 1/2 oz. Tell the bartender 1/2 oz, or pick up one more 750 ml.</p></div>
+      <div class="issue"><strong>Not bought yet</strong><p>Linie Aquavit (9 bottles for the toast) and the N/A drinks.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TO ORDER ============ -->
+<div class="panel" id="order" role="tabpanel" aria-labelledby="tab-order" hidden>
+  <section>
+    <h2>Still to order or buy</h2>
+    <p class="muted">Quantities from the alcohol sheet where it has them; the rest are suggested starting points.</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Qty</th><th>For</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="4">Compostable serviceware</td></tr>
+        <tr><td>Hot cups with lids, 12 oz</td><td class="num">~150</td><td><span class="chip gh">Coffee</span></td><td>Coffee urn makes 100 cups</td></tr>
+        <tr><td>Cake / dessert plates</td><td class="num">~150</td><td><span class="chip gh">Cake</span></td><td></td></tr>
+        <tr><td>Dessert forks</td><td class="num">~150</td><td><span class="chip gh">Cake</span></td><td></td></tr>
+        <tr><td>Toast cups, 2 oz</td><td class="num">~150</td><td><span class="chip gh">Aquavit toast</span></td><td>No small glasses on any order</td></tr>
+        <tr><td>Cocktail napkins</td><td class="num">~400</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>Also under charcuterie</td></tr>
+        <tr><td>Cold cups, 12 to 16 oz</td><td class="num">~150</td><td><span class="chip bluff">Bluff</span></td><td>Backup: only 100 goblets for 140 guests; N/A and lemonade</td></tr>
+        <tr><td>Coffee stirrers, sugar, cream</td><td class="num">~</td><td><span class="chip gh">Coffee</span></td><td>Unless Katherine supplies</td></tr>
+
+        <tr class="group"><td colspan="4">Alcohol and mixers not yet bought</td></tr>
+        <tr><td>Linie Aquavit, 750 ml</td><td class="num">9</td><td><span class="chip gh">Toast</span></td><td>1.5 oz pour for 140 guests</td></tr>
+        <tr><td>Athletic N/A beer, 12-pack</td><td class="num">10</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>About 120 cans</td></tr>
+        <tr><td>N/A margarita ingredients</td><td class="num">1 batch</td><td><span class="chip gh">Bev station</span></td><td>Ritual or Lyre's, or a fresh virgin version</td></tr>
+        <tr><td>Sparkling water and lemonade</td><td class="num">1 batch</td><td><span class="chip bluff">Bluff</span></td><td></td></tr>
+        <tr><td>Fresh limes</td><td class="num">15 doz</td><td><span class="chip gh">Oaxacan</span></td><td>Juice the day before, or buy fresh juice</td></tr>
+        <tr><td>Fresh mint</td><td class="num">6 bunches</td><td><span class="chip gh">Oaxacan</span></td><td>Muddle and garnish</td></tr>
+        <tr><td>Sugar for simple syrup</td><td class="num">1 batch</td><td><span class="chip gh">Oaxacan</span></td><td>Make ahead</td></tr>
+        <tr><td>Lingonberry syrup or preserves</td><td class="num">3 jars</td><td><span class="chip gh">Old Fashioned</span></td><td>Order ahead</td></tr>
+        <tr><td>Angostura bitters</td><td class="num">2</td><td><span class="chip gh">Old Fashioned</span></td><td></td></tr>
+        <tr><td>Sugar cubes and oranges for peels</td><td class="num">1 batch</td><td><span class="chip gh">Old Fashioned</span></td><td></td></tr>
+
+        <tr class="group"><td colspan="4">Chilling (ice handled separately)</td></tr>
+        <tr><td>Coolers or galvanized tubs</td><td class="num">4-6</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>2-3 per bar</td></tr>
+        <tr><td>Ice scoops</td><td class="num">2</td><td><span class="chip gh">Bar</span></td><td></td></tr>
+
+        <tr class="group"><td colspan="4">Bar tools (if the bartender doesn't bring them)</td></tr>
+        <tr><td>Wine openers</td><td class="num">3</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td></td></tr>
+        <tr><td>Bottle openers</td><td class="num">3</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>Sierra Nevada is bottled</td></tr>
+        <tr><td>Jiggers, bar spoons, muddler</td><td class="num">2 sets</td><td><span class="chip gh">Bar</span></td><td></td></tr>
+        <tr><td>Batching containers or pitchers</td><td class="num">4</td><td><span class="chip gh">Bar</span></td><td>Pre-batch both cocktails</td></tr>
+        <tr><td>Citrus press</td><td class="num">1-2</td><td><span class="chip gh">Prep</span></td><td>For 180 limes</td></tr>
+        <tr><td>Cutting boards and knives</td><td class="num">2</td><td><span class="chip gh">Bar</span></td><td>Garnish prep</td></tr>
+        <tr><td>Bar towels</td><td class="num">1 pack</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td></td></tr>
+
+        <tr class="group"><td colspan="4">Trash</td></tr>
+        <tr><td>Extra liners, 40 to 50 gal</td><td class="num">1 box</td><td><span class="chip off">All</span></td><td>Shared cans come with one liner each</td></tr>
+        <tr><td>Recycling bins</td><td class="num">2</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>About 290 beer bottles and cans plus 60 wine bottles</td></tr>
+        <tr><td>Compost bin and bags</td><td class="num">1</td><td><span class="chip gh">Coffee / dessert</span></td><td>For the compostable serviceware</td></tr>
+
+        <tr class="group"><td colspan="4">Signs and small items</td></tr>
+        <tr><td>Place card sign and easel</td><td class="num">1</td><td><span class="chip gh">Entry</span></td><td>Replaces the place card table</td></tr>
+        <tr><td>Card box</td><td class="num">1</td><td><span class="chip move">Card table</span></td><td>Travels with the card table</td></tr>
+        <tr><td>Bar menu sign</td><td class="num">1-2</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>Signature cocktails at the reception</td></tr>
+        <tr><td>Cake knife and server</td><td class="num">1</td><td><span class="chip gh">Cake</span></td><td>Confirm with Katherine</td></tr>
+        <tr><td>Charcuterie boards</td><td class="num">~</td><td><span class="chip bluff">Bluff</span></td><td>Confirm with Katherine</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+</div>
+
+<!-- ============ INVENTORY ============ -->
+<div class="panel" id="inventory" role="tabpanel" aria-labelledby="tab-inventory" hidden>
+  <section>
+    <h2>Rental inventory</h2>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Qty</th><th>Goes to</th><th class="num">Our cost</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="5">Tent Merchant O44583 (ours, rev. 4 plus the changes above)</td></tr>
+        <tr><td>Double old fashioned glass, 12.25 oz</td><td class="num">250</td><td><span class="chip gh">Greenhouse bar</span></td><td class="num">$287.50</td><td>10 racks</td></tr>
+        <tr><td>Wine goblet, 12 oz (cocktail)</td><td class="num">100</td><td><span class="chip bluff">Bluff bar</span></td><td class="num">$115.00</td><td>4 racks, move up after</td></tr>
+        <tr><td><s>Olive king drape, bar front</s></td><td class="num">1</td><td><span class="chip rem">Remove</span></td><td class="num">$45.16</td><td></td></tr>
+        <tr><td><s>Olive 8' drape, bar back</s></td><td class="num">1</td><td><span class="chip rem">Remove</span></td><td class="num">$39.90</td><td></td></tr>
+        <tr><td><s>Olive 120" round</s></td><td class="num">10</td><td><span class="chip rem">Remove</span></td><td class="num">$315.00</td><td></td></tr>
+        <tr><td>Heritage beverage dispenser, 3 gal</td><td class="num">3</td><td><span class="chip gh">Bev stations</span></td><td class="num">$111.00</td><td></td></tr>
+        <tr><td>Tuscan wood crate riser</td><td class="num">3</td><td><span class="chip gh">Bev stations</span></td><td class="num">$0.00</td><td>Included</td></tr>
+        <tr><td>Stainless coffee urn, 100 cup</td><td class="num">1</td><td><span class="chip gh">Coffee</span></td><td class="num">$45.00</td><td></td></tr>
+        <tr><td>Lisbon dinner plate, 10.5"</td><td class="num">150</td><td><span class="chip gh">Buffet</span></td><td class="num">$165.00</td><td></td></tr>
+        <tr><td>Bastia hammered dinner fork</td><td class="num">155</td><td><span class="chip gh">Dining</span></td><td class="num">$162.75</td><td></td></tr>
+        <tr><td>Bastia hammered dinner knife</td><td class="num">155</td><td><span class="chip gh">Dining</span></td><td class="num">$162.75</td><td></td></tr>
+        <tr><td>Margarita glass, 15 oz</td><td class="num">72</td><td><span class="chip gh">Dessert</span></td><td class="num">$82.80</td><td>6 racks</td></tr>
+        <tr><td>Water / iced tea goblet, 16.5 oz</td><td class="num">175</td><td><span class="chip gh">Dining</span></td><td class="num">$201.25</td><td></td></tr>
+        <tr><td>Wine goblet, 12 oz (dinner)</td><td class="num">250</td><td><span class="chip gh">Dining and bar</span></td><td class="num">$287.50</td><td></td></tr>
+        <tr><td>8' banquet table, buffet</td><td class="num">3</td><td><span class="chip gh">Buffet</span></td><td class="num">$38.25</td><td></td></tr>
+        <tr><td>Olive 8' drape, full drop</td><td class="num">3</td><td><span class="chip gh">Buffet</span></td><td class="num">$119.70</td><td></td></tr>
+        <tr><td>White 20" napkin</td><td class="num">155</td><td><span class="chip gh">Dining</span></td><td class="num">$263.50</td><td></td></tr>
+        <tr><td>8' x 40" banquet table, guest seating</td><td class="num">3</td><td><span class="chip gh">Dining</span></td><td class="num">$47.25</td><td></td></tr>
+        <tr><td>Olive king drape, guest tables</td><td class="num">15 + 1</td><td><span class="chip gh">Dining</span></td><td class="num">$677.40 + $45.16</td><td>Adding 1 for the 13th shared table</td></tr>
+        <tr><td>Fruitwood folding chair</td><td class="num">35</td><td><span class="chip bluff">Ceremony</span> <span class="chip move">then dining</span></td><td class="num">~$138</td><td>Adding</td></tr>
+        <tr><td>6' banquet table, beverage stations</td><td class="num">2</td><td><span class="chip gh">Bev stations</span></td><td class="num">$25.00</td><td></td></tr>
+        <tr><td>Olive 6' drape, full drop</td><td class="num">2</td><td><span class="chip gh">Bev stations</span></td><td class="num">$63.00</td><td></td></tr>
+        <tr><td>Griddle, 72", with propane</td><td class="num">1</td><td><span class="chip off">Kitchen</span></td><td class="num">$295.00</td><td></td></tr>
+        <tr><td>Transit warming box</td><td class="num">1</td><td><span class="chip off">Kitchen</span></td><td class="num">$225.00</td><td></td></tr>
+        <tr><td>Sheet pan, 18" x 26"</td><td class="num">10</td><td><span class="chip off">Kitchen</span></td><td class="num">$65.00</td><td></td></tr>
+        <tr><td>Extension cord, 50'</td><td class="num">2</td><td><span class="chip off">Kitchen</span></td><td class="num">$16.00</td><td></td></tr>
+        <tr><td>Delivery, pick-up, set-up fees, breakage deposit</td><td class="num"></td><td><span class="chip off">Fee</span></td><td class="num">$359.00</td><td>Deposit refunded minus breakage</td></tr>
+        <tr class="total"><td>Tent Merchant, rev. 4 as billed</td><td class="num"></td><td></td><td class="num">$4,434.03</td><td>$1,672.03 paid, $2,762 due Oct 15. Drops about $217 plus fees after the changes</td></tr>
+
+        <tr class="group"><td colspan="5">Shared with Thomas &amp; Jocelyn (DJ's Catering; set up for their Oct 23 event and stays)</td></tr>
+        <tr><td>Welcome beverage table, draped</td><td class="num">1</td><td><span class="chip bluff">Bluff bar</span></td><td class="num">$19.75</td><td></td></tr>
+        <tr><td>Cloth market umbrella</td><td class="num">1</td><td><span class="chip bluff">Bluff bar</span></td><td class="num">$25.00</td><td></td></tr>
+        <tr><td>8' x 40" banquet dining table</td><td class="num">13</td><td><span class="chip gh">Dining</span></td><td class="num">$120.25</td><td>Bare; Tent Merchant drapes</td></tr>
+        <tr><td>Fruitwood folding chair, padded</td><td class="num">105</td><td><span class="chip bluff">Ceremony</span></td><td class="num">$233.63</td><td>Stays on the bluff</td></tr>
+        <tr><td>Vineyard crossback chair, padded</td><td class="num">105</td><td><span class="chip gh">Dining</span></td><td class="num">$467.25</td><td>Stays in the greenhouse</td></tr>
+        <tr><td>36" round cake table with cloth</td><td class="num">1</td><td><span class="chip gh">Dessert</span></td><td class="num">$16.25</td><td></td></tr>
+        <tr><td>6' gift table with drape</td><td class="num">1</td><td><span class="chip bluff">Bluff</span> <span class="chip move">then entry</span></td><td class="num">$19.75</td><td>Card table</td></tr>
+        <tr><td>6' place card table with drape</td><td class="num">1</td><td><span class="chip bluff">Bluff</span></td><td class="num">$19.75</td><td>Charcuterie</td></tr>
+        <tr><td>Coffee table, draped</td><td class="num">1</td><td><span class="chip gh">Coffee</span></td><td class="num">$19.75</td><td></td></tr>
+        <tr><td>Toscano wood bar with back bar tables</td><td class="num">1</td><td><span class="chip gh">Greenhouse bar</span></td><td class="num">$147.50</td><td></td></tr>
+        <tr><td>Pedestal cocktail table with cloth</td><td class="num">5</td><td><span class="chip bluff">Bluff</span> <span class="chip move">then entry</span></td><td class="num">$116.25</td><td></td></tr>
+        <tr><td>6' DJ table with drape</td><td class="num">1</td><td><span class="chip bluff">Bluff DJ</span></td><td class="num">$19.75</td><td></td></tr>
+        <tr><td>Oak dance floor, 16' x 21'</td><td class="num">28</td><td><span class="chip gh">Center</span></td><td class="num">$400.68</td><td>Fixed once installed</td></tr>
+        <tr><td>Trash can with liner and cover</td><td class="num">4</td><td><span class="chip bluff">2 bluff</span> <span class="chip gh">2 greenhouse</span></td><td class="num">$25.00</td><td>Bluff cans move up</td></tr>
+        <tr><td>Heat lamps</td><td class="num">6</td><td><span class="chip gh">Greenhouse</span></td><td class="num">$330.00</td><td></td></tr>
+        <tr><td>Delivery, set-up, pick-up</td><td class="num">1</td><td><span class="chip off">Fee</span></td><td class="num">$325.00</td><td></td></tr>
+        <tr class="total"><td>Our shared total</td><td class="num"></td><td></td><td class="num">$2,305.56</td><td></td></tr>
+
+        <tr class="group"><td colspan="5">Lighting and drape, SPARK (split 50/50)</td></tr>
+        <tr class="total"><td>Installed package (see Placement)</td><td class="num"></td><td><span class="chip gh">Greenhouse</span></td><td class="num">$2,785.65</td><td></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+</div>
+
+<footer>Last updated Oct 9, 2026.</footer>
+</div>
+
+<script>
+(function(){
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function show(id, push){
+    var found = false;
+    tabs.forEach(function(t){
+      var on = t.getAttribute('aria-controls') === id;
+      if(on) found = true;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if(!found){ show('overview', false); return; }
+    if(push){ try{ history.replaceState(null, '', '#' + id); }catch(e){} }
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(t.getAttribute('aria-controls'), true); window.scrollTo({top:0}); });
+    t.addEventListener('keydown', function(e){
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if(!d) return;
+      var n = tabs[(i + d + tabs.length) % tabs.length];
+      n.focus(); show(n.getAttribute('aria-controls'), true);
+    });
+  });
+  var start = (location.hash || '').replace('#','');
+  show(start || 'overview', false);
+  window.addEventListener('hashchange', function(){ show((location.hash||'').replace('#',''), false); });
+})();
+</script>
+</body>
+</html>
