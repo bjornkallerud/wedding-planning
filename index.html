@@ -96,6 +96,17 @@ s{color:var(--muted)}
 .recipe ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .stat{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .stat b{font-family:var(--mono);color:var(--fg);font-weight:500;font-size:15px;display:block}
+.todos{margin:0;padding:0;list-style:none;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.todos>li{border-bottom:1px solid var(--line)}
+.todos>li:last-child{border-bottom:0}
+.todos label{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:start;padding:10px 14px;cursor:pointer}
+.todos input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);cursor:pointer}
+.todos input:checked+.txt{color:var(--muted);text-decoration:line-through}
+.todos .due{font-family:var(--mono);font-size:12px;color:var(--warn);white-space:nowrap;padding-top:2px}
+.todos .sub{margin:0;padding:0 0 6px 30px;list-style:none}
+.todos .sub label{padding:6px 14px}
+.h2d{font-family:var(--body);font-size:14px;font-weight:500}
+@media (max-width:520px){.todos label{grid-template-columns:20px 1fr}.todos .due{grid-column:2}}
 footer{color:var(--muted);font-size:13px}
 @media (max-width:520px){.steps li{grid-template-columns:1fr;gap:2px}}
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
@@ -111,6 +122,7 @@ footer{color:var(--muted);font-size:13px}
 
 <nav class="tabs" role="tablist" aria-label="Sections">
   <button role="tab" id="tab-overview" aria-controls="overview" aria-selected="true">Overview</button>
+  <button role="tab" id="tab-todo" aria-controls="todo" aria-selected="false">To do</button>
   <button role="tab" id="tab-placement" aria-controls="placement" aria-selected="false">Placement</button>
   <button role="tab" id="tab-alcohol" aria-controls="alcohol" aria-selected="false">Alcohol</button>
   <button role="tab" id="tab-order" aria-controls="order" aria-selected="false">To order</button>
@@ -174,6 +186,86 @@ footer{color:var(--muted);font-size:13px}
       <div class="issue"><strong>Katherine (catering)</strong><p>Who provides charcuterie boards, coffee, cream and sugar, and the cake knife? Who staffs and batches the bar?</p></div>
       <div class="issue"><strong>BevMo delivery</strong><p>Who receives it before noon, and where is it stored until the bars open?</p></div>
     </div>
+  </section>
+</div>
+
+<!-- ============ TO DO ============ -->
+<div class="panel" id="todo" role="tabpanel" aria-labelledby="tab-todo" hidden>
+  <p class="muted">Checks save in this browser only. <span id="todo-count"></span></p>
+  <section>
+    <h2>This weekend <span class="muted h2d">Sat Oct 10 to Sun Oct 11</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="tm-visit"><span class="txt">Go to Tent Merchant <span class="n">Bring the revision list from Overview, plus the linen napkin upgrade (about +$140, pick a color). Showroom closes 12 to 12:30 for lunch.</span></span><span class="due">Sat, before noon</span></label></li>
+      <li><label><input type="checkbox" data-id="vows"><span class="txt">Write vows</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pens"><span class="txt">Finish the pens</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-1"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="rsvp-email"><span class="txt">Send the info email to everyone confirming their RSVP details</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Next week <span class="muted h2d">Oct 12 to 17</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="license"><span class="txt">Get the marriage license</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-2"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="placard-base"><span class="txt">Get a base for the table placard sign</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-kk"><span class="txt">Pay KK Catering balance <span class="chip off">Suggested</span></span><span class="due">Wed Oct 14</span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tm"><span class="txt">Tent Merchant final revisions and balance <span class="chip off">Suggested</span></span><span class="due">Thu Oct 15, noon</span></label></li>
+      <li><label><input type="checkbox" data-id="pay-bus"><span class="txt">Pay Bill's Bus balance <span class="chip off">Suggested</span></span><span class="due">Sat Oct 17</span></label></li>
+      <li><label><input type="checkbox" data-id="diagram"><span class="txt">Send the final diagram to Tent Merchant <span class="chip off">Suggested</span></span><span class="due">Sat Oct 17</span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tj"><span class="txt">Pay Thomas &amp; Jocelyn for shared rentals <span class="chip off">Suggested</span> <span class="n">Not on the vendor payment schedule yet</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-spark"><span class="txt">Confirm the SPARK payment <span class="chip off">Suggested</span> <span class="n">Not on the vendor payment schedule</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="dp-deposit"><span class="txt">Check the Dos Pueblos security deposit <span class="chip off">Suggested</span> <span class="n">The sheet shows it unpaid; it was due Aug 24</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="na"><span class="txt">Order the N/A drinks <span class="chip off">Suggested</span> <span class="n">Athletic N/A beer, N/A margarita, sparkling water, lemonade</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="questions"><span class="txt">Answer the open questions on Overview <span class="chip off">Suggested</span> <span class="n">Move crew, Saturday greenhouse reset, who receives BevMo, who runs the bar</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="signs"><span class="txt">Finish signage <span class="chip off">Suggested</span> <span class="n">Restroom signs, guest book, card box, reserved family seats; Tori&#39;s extra table numbers</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="bouchon"><span class="txt">Chase Friday Bouchon RSVPs <span class="chip off">Suggested</span> <span class="n">17 of 38 confirmed</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="shotlist"><span class="txt">Send the shot list to the photographer <span class="chip off">Suggested</span> <span class="n">Draft is on the RUN OF SHOW tab</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="vendor-times"><span class="txt">Confirm vendor arrival times <span class="chip off">Suggested</span> <span class="n">Catering, DJ, shuttles, photographer</span></span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Week of <span class="muted h2d">Oct 19 to 23</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="uhaul"><span class="txt">Get the U-Haul</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="flowers"><span class="txt">Buy flowers at the wholesaler in Oxnard</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-3"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="wp-booze"><span class="txt">Buy booze for the welcome party</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="wp-charc"><span class="txt">Buy charcuterie for the welcome party</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="thanks-speech"><span class="txt">Write the thank-you speech for the wedding</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="welcome-speech"><span class="txt">Write the welcome speech for the welcome party</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="kit"><span class="txt">Pack the day-of kit <span class="chip off">Suggested</span> <span class="n">Rings, vows, speech, vendor tip envelopes, wine and bottle openers, card box</span></span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Day before <span class="muted h2d">Fri Oct 23</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="arrange"><span class="txt">Put the flowers together</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="house"><span class="txt">Prep the house for the welcome party</span><span></span></label>
+        <ul class="sub">
+          <li><label><input type="checkbox" data-id="house-lights"><span class="txt">Hang string lights</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-leaves"><span class="txt">Blow leaves</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-tables"><span class="txt">Set up tables and linens <span class="n">4 high-tops from Lisa White</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-furniture"><span class="txt">Set out the outdoor furniture</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-toilet"><span class="txt">Confirm the restroom trailer is delivered <span class="n">VIP Restroom</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-bar"><span class="txt">Ice down the beer and wine; set out cups <span class="n">24 bottles of Alamati</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-charcuterie"><span class="txt">Charcuterie</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-speaker"><span class="txt">Bluetooth speaker and playlist</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-cornhole"><span class="txt">Corn hole <span class="n">Dana?</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-sign"><span class="txt">Put out the welcome sign</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-trash"><span class="txt">Trash and recycling bins</span><span></span></label></li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h2>After <span class="muted h2d">Sun Oct 25 to Mon Oct 26</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="brunch"><span class="txt">Sunday beach brunch, 11 to 1 <span class="chip off">Suggested</span> <span class="n">Coffee, bagels, donuts</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pickup"><span class="txt">Tent Merchant pick-up <span class="chip off">Suggested</span> <span class="n">Teardown checklist is on Placement</span></span><span class="due">Mon, 8 am to 5 pm</span></label></li>
+      <li><label><input type="checkbox" data-id="return-uhaul"><span class="txt">Return the U-Haul <span class="chip off">Suggested</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras <span class="chip off">Suggested</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards <span class="chip off">Suggested</span></span><span></span></label></li>
+    </ul>
   </section>
 </div>
 
@@ -422,7 +514,7 @@ footer{color:var(--muted);font-size:13px}
       <div class="issue ok"><strong>Cocktails</strong><p>About 253 signature cocktails (135 Oaxacan, 118 Old Fashioned), close to 2 per guest at the reception. That's roughly double the original plan of 4 bottles of each.</p></div>
       <div class="issue"><strong>Watch: white wine</strong><p>25 bottles of white. If the bluff goes through its 12 fast on a warm afternoon, dinner has 13 left. Hold a few back for the reception.</p></div>
       <div class="issue"><strong>Watch: Cointreau</strong><p>2.5 L covers about 112 Oaxacans at 3/4 oz or all 135 at 1/2 oz. Tell the bartender 1/2 oz, or pick up one more 750 ml.</p></div>
-      <div class="issue"><strong>Not bought yet</strong><p>Linie Aquavit (9 bottles for the toast) and the N/A drinks.</p></div>
+      <div class="issue"><strong>Not bought yet</strong><p>The N/A drinks. Aquavit was ordered Oct 9.</p></div>
     </div>
   </section>
 </div>
@@ -446,18 +538,18 @@ footer{color:var(--muted);font-size:13px}
         <tr><td>Coffee stirrers, sugar, cream</td><td class="num">~</td><td><span class="chip gh">Coffee</span></td><td>Unless Katherine supplies</td></tr>
 
         <tr class="group"><td colspan="4">Alcohol and mixers not yet bought</td></tr>
-        <tr><td>Linie Aquavit, 750 ml</td><td class="num">9</td><td><span class="chip gh">Toast</span></td><td>1.5 oz pour for 140 guests</td></tr>
+        <tr><td>Linie Aquavit, 750 ml</td><td class="num">9</td><td><span class="chip gh">Toast</span></td><td>Ordered Oct 9</td></tr>
         <tr><td>Athletic N/A beer, 12-pack</td><td class="num">10</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>About 120 cans</td></tr>
         <tr><td>N/A margarita ingredients</td><td class="num">1 batch</td><td><span class="chip gh">Bev station</span></td><td>Ritual or Lyre's, or a fresh virgin version</td></tr>
         <tr><td>Sparkling water and lemonade</td><td class="num">1 batch</td><td><span class="chip bluff">Bluff</span></td><td></td></tr>
-        <tr><td>Fresh limes</td><td class="num">15 doz</td><td><span class="chip gh">Oaxacan</span></td><td>Juice the day before, or buy fresh juice</td></tr>
-        <tr><td>Fresh mint</td><td class="num">6 bunches</td><td><span class="chip gh">Oaxacan</span></td><td>Muddle and garnish</td></tr>
-        <tr><td>Sugar for simple syrup</td><td class="num">1 batch</td><td><span class="chip gh">Oaxacan</span></td><td>Make ahead</td></tr>
-        <tr><td>Lingonberry syrup or preserves</td><td class="num">3 jars</td><td><span class="chip gh">Old Fashioned</span></td><td>Order ahead</td></tr>
-        <tr><td>Angostura bitters</td><td class="num">2</td><td><span class="chip gh">Old Fashioned</span></td><td></td></tr>
-        <tr><td>Sugar cubes and oranges for peels</td><td class="num">1 batch</td><td><span class="chip gh">Old Fashioned</span></td><td></td></tr>
+        <tr><td>Fresh limes</td><td class="num">15 doz</td><td><span class="chip gh">Oaxacan</span></td><td>Caterer buys and juices</td></tr>
+        <tr><td>Fresh mint</td><td class="num">6 bunches</td><td><span class="chip gh">Oaxacan</span></td><td>Caterer</td></tr>
+        <tr><td>Sugar for simple syrup</td><td class="num">1 batch</td><td><span class="chip gh">Oaxacan</span></td><td>Caterer</td></tr>
+        <tr><td>Lingonberry syrup or preserves</td><td class="num">3 jars</td><td><span class="chip gh">Old Fashioned</span></td><td>Caterer</td></tr>
+        <tr><td>Angostura bitters</td><td class="num">2</td><td><span class="chip gh">Old Fashioned</span></td><td>Caterer</td></tr>
+        <tr><td>Sugar cubes and oranges for peels</td><td class="num">1 batch</td><td><span class="chip gh">Old Fashioned</span></td><td>Caterer</td></tr>
 
-        <tr class="group"><td colspan="4">Chilling (ice handled separately)</td></tr>
+        <tr class="group"><td colspan="4">Chilling (caterer brings the ice)</td></tr>
         <tr><td>Coolers or galvanized tubs</td><td class="num">4-6</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>2-3 per bar</td></tr>
         <tr><td>Ice scoops</td><td class="num">2</td><td><span class="chip gh">Bar</span></td><td></td></tr>
 
@@ -466,7 +558,7 @@ footer{color:var(--muted);font-size:13px}
         <tr><td>Bottle openers</td><td class="num">3</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td>Sierra Nevada is bottled</td></tr>
         <tr><td>Jiggers, bar spoons, muddler</td><td class="num">2 sets</td><td><span class="chip gh">Bar</span></td><td></td></tr>
         <tr><td>Batching containers or pitchers</td><td class="num">4</td><td><span class="chip gh">Bar</span></td><td>Pre-batch both cocktails</td></tr>
-        <tr><td>Citrus press</td><td class="num">1-2</td><td><span class="chip gh">Prep</span></td><td>For 180 limes</td></tr>
+        <tr><td>Citrus press</td><td class="num">1-2</td><td><span class="chip gh">Prep</span></td><td>Likely not needed; caterer juices</td></tr>
         <tr><td>Cutting boards and knives</td><td class="num">2</td><td><span class="chip gh">Bar</span></td><td>Garnish prep</td></tr>
         <tr><td>Bar towels</td><td class="num">1 pack</td><td><span class="chip bluff">Bluff</span> <span class="chip gh">Bar</span></td><td></td></tr>
 
@@ -582,6 +674,27 @@ footer{color:var(--muted);font-size:13px}
   var start = (location.hash || '').replace('#','');
   show(start || 'overview', false);
   window.addEventListener('hashchange', function(){ show((location.hash||'').replace('#',''), false); });
+})();
+</script>
+<script>
+(function(){
+  var KEY='wedding-todo-v1', state={};
+  try{ state=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
+  var boxes=Array.prototype.slice.call(document.querySelectorAll('#todo input[type=checkbox]'));
+  var count=document.getElementById('todo-count');
+  function update(){
+    var done=boxes.filter(function(b){return b.checked}).length;
+    count.textContent=done+' of '+boxes.length+' done.';
+  }
+  boxes.forEach(function(b){
+    b.checked=!!state[b.dataset.id];
+    b.addEventListener('change',function(){
+      state[b.dataset.id]=b.checked;
+      try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){}
+      update();
+    });
+  });
+  update();
 })();
 </script>
 </body>
