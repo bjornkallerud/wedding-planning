@@ -13,6 +13,7 @@
   --bg:#f5f7f4; --surface:#ffffff; --fg:#1f2a24; --muted:#5e6b63; --line:#d9e0da;
   --accent:#2f6b4f; --bluff:#2c5f86; --gh:#2f6b4f; --move:#8a5a12; --warn-bg:#fbf3e4; --warn:#8a5a12; --ok-bg:#e8f2ec;
   --add:#2f6b4f; --rem:#a3392f;
+  --diet:#f6dc72; --diet-fg:#4a3a00; --diet-ring:#c9a227; --allergy:#c2412f; --allergy-bg:#c94a3f; --allergy-fg:#ffffff; --seat-line:#a9b5ad;
   --chip-bluff:#e3edf5; --chip-gh:#e2efe7; --chip-move:#f6ead6; --chip-off:#ececec; --chip-rem:#f7e3e0;
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
   --body:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
@@ -23,11 +24,13 @@
   --bg:#141a17; --surface:#1b231f; --fg:#e4ebe6; --muted:#9aa89f; --line:#2c3832;
   --accent:#7cc39e; --bluff:#86b7dc; --gh:#7cc39e; --move:#e2b56a; --warn-bg:#2a2317; --warn:#e2b56a; --ok-bg:#1c2a22;
   --add:#7cc39e; --rem:#ec8a7f;
+  --diet:#7a6212; --diet-fg:#fff3c4; --diet-ring:#c9a227; --allergy:#ec8a7f; --allergy-bg:#b53a2f; --allergy-fg:#ffffff; --seat-line:#4f6157;
   --chip-bluff:#1e3142; --chip-gh:#1d3328; --chip-move:#3a2e1a; --chip-off:#2a2f2c; --chip-rem:#3a201d; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#141a17; --surface:#1b231f; --fg:#e4ebe6; --muted:#9aa89f; --line:#2c3832;
   --accent:#7cc39e; --bluff:#86b7dc; --gh:#7cc39e; --move:#e2b56a; --warn-bg:#2a2317; --warn:#e2b56a; --ok-bg:#1c2a22;
   --add:#7cc39e; --rem:#ec8a7f;
+  --diet:#7a6212; --diet-fg:#fff3c4; --diet-ring:#c9a227; --allergy:#ec8a7f; --allergy-bg:#b53a2f; --allergy-fg:#ffffff; --seat-line:#4f6157;
   --chip-bluff:#1e3142; --chip-gh:#1d3328; --chip-move:#3a2e1a; --chip-off:#2a2f2c; --chip-rem:#3a201d; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -110,6 +113,66 @@ s{color:var(--muted)}
 footer{color:var(--muted);font-size:13px}
 @media (max-width:520px){.steps li{grid-template-columns:1fr;gap:2px}}
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+/* Seating: the floor plan is built by the seating script; seats are buttons so hover, focus and tap all open the guest card */
+.stage{width:min(1280px,calc(100vw - 48px));margin-left:calc(50% - min(640px,50vw - 24px));display:flex;flex-direction:column;gap:14px}
+.seatbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seatbar input{font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--fg);flex:1 1 200px;max-width:300px;min-width:0}
+.seatbar input:focus-visible,.toggle:focus-visible,.st:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.toggle{font:600 13px var(--body);border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer}
+.toggle[aria-pressed="true"]{background:var(--diet);color:var(--diet-fg);border-color:var(--diet-ring)}
+.found{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-left:auto}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--seat-line);background:var(--surface)}
+.legend i.d{background:var(--diet);border-color:var(--diet-ring)}
+.legend i.a{background:var(--allergy-bg);border-color:var(--allergy)}
+.legend i.s{outline:2px dotted var(--allergy);outline-offset:2px;margin-inline:4px}
+.room{--seat:46px;--gap:3px;display:grid;grid-template-columns:minmax(0,1fr);gap:30px 24px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:28px 24px}
+.room>*{min-width:0}
+.tscroll{overflow-x:auto;padding-block:4px;scrollbar-width:thin}
+.tgrid{display:grid;width:max-content;margin-inline:auto;padding-inline:calc(var(--seat)*.6)}
+.row{display:flex;gap:var(--gap);justify-content:space-evenly;padding-inline:10px;position:relative;z-index:1}
+.row.top{margin-bottom:calc(var(--seat)*-.3)}
+.row.bot{margin-top:calc(var(--seat)*-.3)}
+.tbody{position:relative;min-height:calc(var(--seat)*1.75);border:2.5px solid var(--fg);border-radius:18px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:calc(var(--seat)*.35) calc(var(--seat)*.7)}
+.tbody .seg{position:absolute;top:0;bottom:0;width:0;border-left:1.5px solid var(--line)}
+.tbody b{font:700 clamp(17px,2vw,22px)/1 var(--display);letter-spacing:.02em;text-transform:uppercase;position:relative}
+.tbody small{font-size:12px;color:var(--muted);position:relative;white-space:nowrap}
+.end{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:var(--gap);z-index:1}
+.end.l{left:calc(var(--seat)*-.55)}
+.end.r{right:calc(var(--seat)*-.55)}
+.st{--fs:1;width:var(--seat);height:var(--seat);flex:none;border-radius:50%;border:1.5px solid var(--seat-line);background:var(--surface);color:var(--fg);font:600 calc(var(--seat)*.18*var(--fs))/1.05 var(--body);text-transform:uppercase;display:grid;place-items:center;text-align:center;padding:2px;cursor:pointer;position:relative;transition:transform .15s,box-shadow .15s,opacity .2s,border-color .15s;animation:pop .32s backwards;animation-delay:calc(var(--i,0)*6ms)}
+.st.diet{background:var(--diet);color:var(--diet-fg);border-color:var(--diet-ring)}
+.st.allergy{background:var(--allergy-bg);color:var(--allergy-fg);border-color:var(--allergy-bg)}
+.st:hover,.st.cur{transform:scale(1.14);z-index:3;border-color:var(--accent);box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.st.severe{outline:2.5px dotted var(--allergy);outline-offset:3px}
+.st.mate{outline:2px dashed var(--accent);outline-offset:2px}
+.st.hit{box-shadow:0 0 0 3px var(--accent)}
+.st.dim{opacity:.2}
+@keyframes pop{from{opacity:0;transform:scale(.6)}}
+.floor{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+.floor div{width:100%;max-width:170px;aspect-ratio:1;background:repeating-conic-gradient(var(--fg) 0 25%,transparent 0 50%) 0 0/25% 25%;border:2px solid var(--fg);opacity:.85}
+.band svg{width:44px;height:44px;fill:none;stroke:var(--fg);stroke-width:1.6}
+.gcard{position:fixed;left:0;top:0;z-index:20;width:300px;max-width:calc(100vw - 24px);background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 36px rgba(0,0,0,.2);padding:14px 16px;font-size:13px;line-height:1.45;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+.gcard.on{opacity:1;transform:none}
+.gcard h3{margin-top:2px}
+.gcard dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:10px 0 0}
+.gcard dt{color:var(--muted)}
+.gcard dd{margin:0}
+.gcard .dbox{background:var(--diet);color:var(--diet-fg);border-radius:6px;padding:8px 10px;margin-top:10px}
+.gcard .dbox.allergy{background:var(--allergy-bg);color:var(--allergy-fg);box-shadow:inset 3px 0 0 var(--allergy)}
+.gcard .flag{color:var(--rem);margin-top:8px}
+#diet-rows tr{cursor:pointer}
+#diet-rows tr:hover td{background:var(--bg)}
+@media (min-width:1020px){
+  .room{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"t1 t1" "t2 t3" "t4 t5" "t6 t7" "floor band"}
+  .room>[data-a="t1"]{grid-area:t1} .room>[data-a="t2"]{grid-area:t2} .room>[data-a="t3"]{grid-area:t3}
+  .room>[data-a="t4"]{grid-area:t4} .room>[data-a="t5"]{grid-area:t5} .room>[data-a="t6"]{grid-area:t6}
+  .room>[data-a="t7"]{grid-area:t7} .room>[data-a="floor"]{grid-area:floor} .room>[data-a="band"]{grid-area:band}
+}
+@media (min-width:1280px){.room{grid-template-columns:minmax(0,1fr) minmax(120px,170px) minmax(0,1fr);grid-template-areas:"t1 t1 t1" "t2 floor t3" "t4 floor t5" "t6 band t7"}}
+@media (max-width:640px){.room{--seat:42px;padding:20px 8px}.legend{margin-left:0}}
+@media (prefers-reduced-motion: reduce){.st,.gcard{animation:none;transition:none}}
 </style>
 </head>
 <body>
@@ -123,6 +186,7 @@ footer{color:var(--muted);font-size:13px}
 <nav class="tabs" role="tablist" aria-label="Sections">
   <button role="tab" id="tab-overview" aria-controls="overview" aria-selected="true">Overview</button>
   <button role="tab" id="tab-todo" aria-controls="todo" aria-selected="false">To do</button>
+  <button role="tab" id="tab-seating" aria-controls="seating" aria-selected="false">Seating</button>
   <button role="tab" id="tab-placement" aria-controls="placement" aria-selected="false">Placement</button>
   <button role="tab" id="tab-alcohol" aria-controls="alcohol" aria-selected="false">Alcohol</button>
   <button role="tab" id="tab-order" aria-controls="order" aria-selected="false">To order</button>
@@ -297,6 +361,34 @@ footer{color:var(--muted);font-size:13px}
       <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras</span><span></span></label></li>
       <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards</span><span></span></label></li>
     </ul>
+  </section>
+</div>
+
+<!-- ============ SEATING ============ -->
+<div class="panel" id="seating" role="tabpanel" aria-labelledby="tab-seating" hidden>
+  <section>
+    <h2>Seating chart</h2>
+    <p class="meta">Hover or tap a name for RSVP and name card details. Red seats have an allergy, with a dotted ring for a severe one; yellow seats have a preference.</p>
+    <div class="stat" id="seat-stats"></div>
+    <div class="stage">
+      <div class="seatbar">
+        <input type="search" id="seat-q" placeholder="Find a guest" aria-label="Find a guest" autocomplete="off">
+        <button type="button" class="toggle" id="seat-diet" aria-pressed="false">Allergies and preferences</button>
+        <span class="found" id="seat-found" aria-live="polite"></span>
+        <div class="legend"><span><i></i>Guest</span><span><i class="d"></i>Preference</span><span><i class="a"></i>Allergy</span><span><i class="a s"></i>Severe allergy</span></div>
+      </div>
+      <div class="room" id="room"></div>
+    </div>
+  </section>
+  <section>
+    <h2>Dietary restrictions by table</h2>
+    <p class="meta">For the caterer, from the RSVPs on the guest list. Click a row to find the seat.</p>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Table</th><th>Guest</th><th>Restriction</th><th>RSVP note</th></tr></thead>
+      <tbody id="diet-rows"></tbody>
+    </table>
+    </div>
   </section>
 </div>
 
@@ -672,7 +764,7 @@ footer{color:var(--muted);font-size:13px}
   </section>
 </div>
 
-<footer>Last updated Oct 10, 2026.</footer>
+<footer>Last updated Oct 12, 2026.</footer>
 </div>
 
 <script>
@@ -723,6 +815,409 @@ footer{color:var(--muted);font-size:13px}
     });
   });
   update();
+})();
+</script>
+<script>
+(function(){
+  // Parties from the Guest List tab: invite name, group, RSVP date, welcome party, shuttle, dietary note as written
+  var P = {
+    bs:['B&S','Kallerud family','','yes','yes',''],
+    thor:['Thor and Barbie Kallerud','Kallerud family','6/5','yes','yes','No hard boiled eggs please!! ;)'],
+    tori:['Tori Kallerud and Jack Arnot','Kallerud family','6/17','yes','yes','hbes'],
+    pk:['Pete and Kim Jacobs Patterson','Kallerud family','7/14','yes','yes',''],
+    ruff:['Ruff Patterson','Kallerud family','6/19','yes','yes',''],
+    matt:['Matt, Kimberly, and Siena Patterson','Kallerud family','6/28','yes','yes','Gluten free-Kimberly'],
+    trond:['Trond Kallerud and Lisbeth Olafsen','Kallerud family','7/14','yes','yes','Any Alchol free drinks……'],
+    cardon:['Jeff and Helen','Kallerud family friends','9/8','yes','yes',''],
+    jorg:['Blake and Debbie Jorgenson','Kallerud family friends','8/2','yes','no',''],
+    otto:['Otto Tschudi','Kallerud family friends','6/27','yes','yes',''],
+    nico:['Nico and Gro Nicolaisen','Kallerud family friends','7/7','yes','yes','None'],
+    gaddis:['Jim and Barbara Gaddis','Kallerud family friends','7/15','yes','no','Gluten Free'],
+    peterson:['Heidi and Kurt Peterson','Kallerud family friends','7/14','yes','yes','None!'],
+    berro:['Alan & Lara Berro','Kallerud family friends','7/15','yes','yes','None'],
+    brett:['Walt and Jennie Brett','Kallerud family friends','7/19','yes','no','No chicken for Jennie. No beets for both Walt and Jennie'],
+    naima:['Naima and Tristan Simi and Aziz','Simi family','8/28','yes','yes',''],
+    stephen:['Stephen and Tatyana Simi','Simi family','6/19','yes','yes',''],
+    robert:['Robert Simi','Simi family','7/9','yes','yes',''],
+    bobby:['Bobby Simi, Claudine, Mickey, Cole','Simi family','7/19','yes','yes',''],
+    cummings:['Ann Marie & Andrew Cummings','Simi family','7/17','yes','yes',''],
+    hession:['Barbara & Rich Hession','Simi family','7/6','yes','no',''],
+    rodriguez:['Kim & Josh Rodriguez (plus Violet & Owen)','Simi family','6/16','yes','yes',''],
+    swegar:['Matt and Chantal Swegar','Simi family','8/1','yes','yes',''],
+    wapner:['Jeff and Louisa Wapner','Bjorn close','6/26','yes','yes','Fish yes, meat and dairy no :)'],
+    garrison:['Nathan and Katherine Garrison','Bjorn close','7/12','yes','yes',''],
+    whitem:['Jason White and Morgan Stickney','Bjorn close','6/28','yes','yes',''],
+    dom:['Dom Bone and Lindsay Dill','Bjorn close','7/19','yes','no',''],
+    cappon:['Kev and Annie Cappon','Bjorn close','6/16','yes','yes',"none! can't wait to celebrate you beautiful humans <3"],
+    otte:['Paul Otte and Sophia Nitti','Bjorn close','9/22','yes','yes',''],
+    howard:['Claire Howard and Tomas Asmann','Bjorn close','7/1','yes','yes','Pescatarian'],
+    leksan:['Cole and Suza Leksan','Bjorn close','6/16','yes','yes',''],
+    port:['PORT','Bjorn close','7/15','yes','yes','None'],
+    maier:['Jason and Jess Maier','Bjorn close','6/19','yes','no','Jason is gluten free'],
+    kalan:['PK and Rachey','Bjorn close','7/16','yes','yes',''],
+    tann:['Paul Tannenbaum and Kelly Dean','Bjorn close','6/19','yes','yes','Gluten free 🤘'],
+    menzies:["The Menzieses'",'Bjorn close','7/16','yes','yes',''],
+    wathen:['Mike and Amanda Wathen','Bjorn close','7/16','yes','yes','Hot dogs only please'],
+    spring:['Ben and Karis Spring','Bjorn close','7/15','yes','no',''],
+    rudolph:['Ben and Mercy Rudolph','Bjorn close','6/22','yes','no',''],
+    jonas:['Jonas Nauerz','Bjorn close','6/30','yes','yes',''],
+    orset:['Andreas and Martine Orset','Bjorn close','7/21','yes','yes','None'],
+    ball:['Scott and Liz Ball','Bjorn close','7/3','yes','no',"Liz is a fish vegan, so like a vegan with a bloodthirst for seafood she can't control"],
+    jb:['JB and Camila','Bjorn close','7/16','yes','yes',''],
+    boutcher:['Ryan and Sarah Boutcher','Bjorn close','7/22','yes','yes',''],
+    riparetti:['Tommy and Jordan Riparetti','Bjorn close','6/17','yes','yes',''],
+    freeman:['Pete and Haley Freeman','Bjorn close','6/24','yes','yes',''],
+    evershed:['Gary and Paula Evershed','Soraya close','7/5','yes','yes',''],
+    sliff:['Morgan and Christian Sliff','Soraya close','6/22','yes','yes',''],
+    conroy:['Colleen Conroy and Griff Siebert','Soraya close','7/19','yes','yes','Pescatarian:)'],
+    kahn:['Molly and Teddy Kahn','Soraya close','7/5','yes','yes',''],
+    jordyn:['Jordyn Romero','Soraya close','7/1','yes','yes',''],
+    will:['William Lenfestey','Soraya close','7/6','yes','yes',''],
+    jillian:['Jillian Gubler','Soraya close','6/24','yes','yes','I can only eat hard boiled eggs at scenic venues'],
+    wallen:['Sara Wallenmeyer','Soraya close','7/3','yes','yes','Shellfish'],
+    nixon:['Emily Nixon','Soraya close','','yes','yes','seafood only, no dairy'],
+    strube:['Ellie Strube','Soraya close','7/20','yes','yes',''],
+    tess:['Tess McCormick','Soraya close','7/19','yes','yes','I am vegetarian!'],
+    daphne:['Daphne Armstrong','Soraya close','7/19','yes','yes',''],
+    horsley:['Blake Horsley and Ann Molin','Soraya close','7/19','yes','yes','Allergic to all that bullllshit (no allergies)'],
+    holland:['Evren and Travis Holland','Soraya close','7/21','yes','no','No dairy, no egg, no shellfish, no soy or soy products. My baby is severely allergic and I’m breastfeeding. No cross contamination.'],
+    dong:['Lukas and Aliki Dong','Soraya close','7/5','yes','yes',''],
+    dubeck:['Owen Dubeck','Soraya less close','6/24','yes','yes','Allergy to dairy and eggs'],
+    derose:['Joseph DeRose','Soraya less close','6/27','yes','yes',''],
+    oconnell:["Daniel O'Connell",'Soraya less close','','yes','yes',''],
+    noren:['Nicole Noren','Soraya less close','7/19','yes','yes',''],
+    romanov:['Mark Romanov','Soraya less close','9/28','yes','yes','Gracie has a ton of allergies: Severe peanut/treenut allergy, mild shellfish allergy, no beef (preference). We should talk because maybe we should bring food to make it easier!'],
+    burns:['Anna Wilder Burns & Chris Miller','Soraya less close','6/23','yes','yes',''],
+    penna:['Sarah Penna','Soraya less close','7/7','yes','yes','Allergic to all Alliums (garlic/onions/leeks/chives/shallots/scallions)'],
+    pasztor:['Annalise Pasztor','Soraya less close','6/17','yes','yes',''],
+    lang:['The Lang Gang','Remaining','8/23','no','no','My sister (Sammy Lang) has celiac'],
+    white:['Lisa & Randy White','Remaining','9/9','yes','no',''],
+    fields:['Nick Fields','Remaining','8/4','yes','yes',''],
+    agonias:['Jill Agonias & Estebon Balikian','Remaining','9/12','yes','no',''],
+    vovard:['Marine Vovard','Remaining','9/10','yes','yes',''],
+    shamon:['Shamon Walker','Remaining','8/21','yes','yes','Yeeeeeeeew!!'],
+    jpeterson:['Jenna Peterson','Remaining','9/23','yes','yes',''],
+    karman:['Michael B. Karman','Remaining','10/3','yes','yes','Non judgmental vegetarian but can also skip dinner if difficult!']
+  };
+  // Guests: id, label on the chart, full name, party, name card label, note by, photo, card written, pen, in guest list (Name Cards & Seating Chart tab)
+  var G = [
+    ['soraya','Soraya','Soraya Simi','bs','Bride','',0,0,'',0],['bjorn','Bjorn','Bjorn Kallerud','bs','Groom','',0,0,'',0],
+    ['naima','Naima','Naima Simi','naima','Mother of the Bride','Soraya',0,1,'S-F',1],['stephen','Stephen','Stephen Simi','stephen','Father of the Bride','Soraya',0,1,'S-F',1],
+    ['barbie','Barbie','Barbie Kallerud','thor','Mother of the Groom','Bjorn',1,0,'A',1],['thor','Thor','Thor Kallerud','thor','Father of the Groom','Bjorn',1,0,'A',1],
+    ['tori','Tori','Tori Kallerud','tori','','Bjorn',1,0,'A',1],['jack','Jack','Jack Arnot','tori','','Bjorn',0,0,'A',0],
+    ['tristan','Tristan','Tristan Simi','naima','','Soraya',0,1,'A',1],['aziz','Aziz','Aziz Hana','naima','','Soraya',0,1,'A',0],
+    ['tatyana','Tatyana','Tatyana Simi','stephen','','Soraya',0,1,'A',1],['poppop','Pop Pop','Robert Simi','robert','','Soraya',0,1,'A',1],
+    ['trond','Trond','Trond Kallerud','trond','','Bjorn',1,0,'A',1],['lisbeth','Lisbeth','Lisbeth Olafsen','trond','','Bjorn',1,0,'A',1],
+    ['pete','Pete','Pete Patterson','pk','','Bjorn',1,0,'A',1],['kimj','Kim','Kim Jacobs','pk','','Bjorn',1,0,'A',1],
+    ['ruff','Ruff','Ruff Patterson','ruff','','Bjorn',1,0,'A',1],['mattp','Matt','Matt Patterson','matt','','Bjorn',1,0,'A',1],
+    ['kimberly','Kimberly','Kimberly Patterson','matt','','Bjorn',1,0,'A',1],['siena','Siena','Siena Patterson','matt','','Bjorn',1,0,'B',1],
+    ['nico','Nico','Nico Nicolaisen','nico','','Bjorn',1,0,'A',1],['gro','Gro','Gro Nicolaisen','nico','','Bjorn',1,0,'A',1],
+    ['otto','Otto','Otto Tschudi','otto','','Bjorn',1,0,'A',0],
+    ['bobby','Bobby','Bobby Simi','bobby','','Soraya',0,1,'A',1],['claudine','Claudine','Claudine Simi','bobby','','Soraya',0,1,'A',1],
+    ['mickey','Mickey','Mickey Simi','bobby','','Soraya',0,1,'A',1],['coles','Cole','Cole Simi','bobby','','Soraya',0,1,'A',1],
+    ['annmarie','Ann Marie','Ann Marie Cummings','cummings','','Soraya',0,1,'A',1],['andrew','Andrew','Andrew Cummings','cummings','','Soraya',0,1,'A',1],
+    ['barb','Barb','Barbara Hession','hession','','Soraya',0,1,'A',1],['rich','Rich','Richard Hession','hession','','Soraya',0,1,'A',1],
+    ['kimr','Kim','Kim Rodriguez','rodriguez','','Soraya',0,1,'A',1],['josh','Josh','Josh Rodriguez','rodriguez','','Soraya',0,1,'A',1],
+    ['violet','Violet','Violet Rodriguez','rodriguez','','Soraya',0,1,'B',1],['owenr','Owen','Owen Rodriguez','rodriguez','','Soraya',0,1,'B',1],
+
+    ['heidi','Heidi','Heidi Peterson','peterson','','Bjorn',0,1,'C',1],['kurt','Kurt','Kurt Peterson','peterson','','Bjorn',0,1,'B',1],
+    ['debbie','Debbie','Debbie Jorgensen','jorg','','Bjorn',0,1,'B',1],['blakej','Blake','Blake Jorgensen','jorg','','Bjorn',0,1,'B',1],
+    ['jeffc','Jeff','Jeff Cardon','cardon','','Bjorn',0,1,'B',1],['helen','Helen','Helen Cardon','cardon','','Bjorn',0,1,'B',1],
+    ['barbarag','Barbara','Barbara Gaddis','gaddis','','Bjorn',0,1,'C',1],['jim','Jim','Jim Gaddis','gaddis','','Bjorn',0,1,'C',1],
+    ['chantal','Chantal','Chantal Swegar','swegar','','Soraya',0,0,'B',1],['matts','Matt','Matt Swegar','swegar','','Soraya',0,0,'B',1],
+    ['lisa','Lisa','Lisa White','white','','Bjorn',0,1,'S-SE',1],['randy','Randy','Randy White','white','','Bjorn',0,1,'S-SE',1],
+    ['alan','Alan','Alan Berro','berro','','Bjorn',0,1,'B',1],['lara','Lara','Lara Berro','berro','','Bjorn',0,1,'C',1],
+    ['walt','Walt','Walt Brett','brett','','Bjorn',0,1,'B',1],['jennie','Jennie','Jennie Brett','brett','','Bjorn',0,1,'C',1],
+
+    ['morgan','Morgan','Morgan Sliff','sliff','','Soraya',0,0,'B',1],['christian','Christian','Christian Stutzman','sliff','','Soraya',0,0,'B',1],
+    ['colleen','Colleen','Colleen Conroy','conroy','','Soraya',0,0,'B',1],['griffin','Griffin','Griffin Siebert','conroy','','Soraya',0,0,'B',1],
+    ['molly','Molly','Molly Kahn','kahn','','Soraya',0,0,'B',1],['teddy','Teddy','Teddy Kahn','kahn','','Soraya',0,0,'B',1],
+    ['anna','Anna','Anna Burns','burns','','Soraya',0,0,'B',1],['chris','Chris','Chris Miller','burns','','Soraya',0,0,'B',1],
+    ['owend','Owen','Owen Dubeck','dubeck','','Soraya',0,0,'B',1],['julia','Julia','Julia DeSantis','','','Soraya',0,0,'B',1],
+    ['gary','Gary','Gary Evershed','evershed','','Soraya',0,0,'B',1],['paula','Paula','Paula Evershed','evershed','','Soraya',0,0,'B',1],
+    ['sarahp','Sarah','Sarah Penna','penna','','Soraya',0,0,'B',1],['will','Will','Will Lenfestey','will','','Soraya',0,0,'B',0],
+    ['evren','Evren','Evren Holland','holland','','Soraya',0,0,'B',1],['travis','Travis','Travis Holland','holland','','Soraya',0,0,'B',1],
+    ['saraw','Sara','Sara Wallenmeyer','wallen','','Soraya',0,0,'B',1],['taylor','Taylor','Taylor Remsen','','','Soraya',0,0,'B',1],
+
+    ['wappy','Wappy','Jeff Wapner','wapner','','Bjorn',1,0,'A',1],['louisa','Louisa','Louisa Kimble','wapner','','Bjorn',1,0,'A',1],
+    ['nate','Nate','Nathan Garrison','garrison','','Bjorn',1,0,'A',1],['kk','KK','Katherine Knowlton','garrison','','Bjorn',1,0,'B',1],
+    ['benr','Ben','Ben Rudolph','rudolph','','Bjorn',1,0,'B',1],['mercy','Mercy','Mercy Rudolph','rudolph','','Bjorn',1,0,'B',1],
+    ['jonas','Jonas','Jonas Nauerz','jonas','','Bjorn',1,0,'B',1],['magaly','Magali','Magaly Sáenz Somarriba','','','Bjorn',0,0,'B',1],
+    ['andreas','Andres','Andreas Orset','orset','','Bjorn',1,0,'B',1],
+    ['scott','Scott','Scott Ball','ball','','Bjorn',1,1,'B',1],['liz','Liz','Liz Ball','ball','','Bjorn',1,1,'B',1],
+    ['jb','JB','John Brock','jb','','Bjorn',1,0,'B',1],['camila','Camila','Camila Vargas Poulsen','jb','','Bjorn',1,0,'B',1],
+    ['claire','Claire','Claire Howard','howard','','Bjorn',0,0,'B',1],['tomas','Tomas','Tomas Asmann','howard','','Bjorn',0,0,'B',1],
+    ['jasonm','Jason','Jason Maier','maier','','Bjorn',1,0,'B',1],['jess','Jess','Jess Maier','maier','','Bjorn',1,0,'B',1],
+
+    ['kev','Kev','Kevin Cappon','cappon','','Bjorn',1,0,'B',1],['annie','Annie','Annie Cappon','cappon','','Bjorn',1,0,'B',1],
+    ['paulo','Paul','Paul Otte','otte','','Bjorn',1,0,'B',1],['sophia','Sophia','Sophia Nitti','otte','','Soraya',0,0,'B',1],
+    ['colel','Cole','Cole Leksan','leksan','','Bjorn',1,0,'B',1],['suza','Suza','Suza Leksan','leksan','','Bjorn',1,0,'B',1],
+    ['port','Port','Ryan Porteus','port','','Bjorn',1,0,'C',1],['nick','Nick','Nick Fields','fields','','Bjorn',1,0,'C',1],
+    ['dan','Dan',"Daniel O'Connell",'oconnell','','Soraya',0,0,'B',1],
+
+    ['ellie','Ellie','Ellie Strube','strube','','Soraya',0,0,'B',1],['emily','Emily','Emily Nixon','nixon','','Soraya',0,0,'C',1],
+    ['daphne','Daphne','Daphne Armstrong','daphne','','Soraya',0,0,'B',1],['tess','Tess','Tess McCormick','tess','','Soraya',0,0,'C',1],
+    ['jordyn','Jordyn','Jordyn Romero','jordyn','','Soraya',0,0,'B',1],['jillian','Jillian','Jillian Gubler','jillian','','Soraya',0,0,'C',1],
+    ['joseph','Joseph','Joseph DeRose','derose','','Soraya',0,0,'B',1],['shamon','Shamon','Shamon Walker','shamon','','Bjorn',1,0,'C',1],
+    ['hector','Hector','Hector Kielbock','','','',0,0,'',0],
+
+    ['pault','Paul','Paul Tannenbaum','tann','','Bjorn',1,0,'B',1],['kelly','Kelly','Kelly Dean','tann','','Bjorn',1,0,'C',1],
+    ['jon','Jon','Jon Menzies','menzies','','Bjorn',1,0,'B',1],['dana','Dana','Dana Menzies','menzies','','Bjorn',1,0,'C',1],
+    ['bens','Ben','Ben Spring','spring','','Bjorn',1,0,'S-SE',1],['karis','Karis','Karis Spring','spring','','Bjorn',1,0,'C',1],
+    ['ryanb','Ryan','Ryan Boutcher','boutcher','','Bjorn',1,0,'A',1],['sarahb','Sarah','Sarah Boutcher','boutcher','','Bjorn',0,0,'C',1],
+    ['mike','Mike','Mike Wathen','wathen','','Bjorn',1,0,'B',1],['amanda','Amanda','Amanda Wathen','wathen','','Bjorn',1,0,'C',1],
+
+    ['petef','Pete','Pete Freeman','freeman','','Soraya',0,0,'B',1],['haley','Haley','Haley Freeman','freeman','','Soraya',0,0,'C',1],
+    ['parker','Parker','Parker Kalan','kalan','','Bjorn',1,0,'B',1],['rachel','Rachel','Rachel Kalan','kalan','','Bjorn',1,0,'B',1],
+    ['dom','Dom','Dom Burnham','dom','','Bjorn',1,0,'A',1],['lindsay','Lindsay','Lindsay Dill','dom','','Bjorn',1,0,'B',1],
+    ['jasonw','Jason','Jason White','whitem','','Bjorn',1,0,'S-SE',1],['morgans','Morgan','Morgan Stickney','whitem','','Bjorn',1,0,'S-SE',1],
+    ['tommy','Tommy','Tommy Riparetti','riparetti','','Bjorn',1,0,'S-SE',1],['jordan','Jordan','Jordan Riparetti','riparetti','','Bjorn',0,0,'C',1],
+
+    ['blakeh','Blake','Blake Horsley','horsley','','Soraya',0,0,'B',1],['annm','Ann','Ann Molin','horsley','','Soraya',0,0,'C',1],
+    ['jill','Jill','Jill Agonias','agonias','','Soraya',0,0,'B',0],['esteban','Esteban','Estebon Balikian','agonias','','Soraya',0,0,'C',0],
+    ['annalise','Annalise','Annalise Pasztor','pasztor','','Soraya',0,0,'C',1],
+    ['sammy','Sammy','Sammy Lang','lang','','Soraya',0,0,'C',1],['markl','Mark','Mark Lang','lang','','Soraya',0,0,'C',1],
+    ['jenna','Jenna','Jenna Peterson','jpeterson','','Soraya',0,0,'B',1],['michael','Michael','Michael B. Karman','karman','','Soraya',0,0,'C',1],
+    ['nicole','Nicole','Nicole Noren','noren','','Soraya',0,0,'C',1],['khaldoun','Khaldoun','Khaldoun Shobaki','noren','','Soraya',0,0,'C',0],
+    ['lukas','Lukas','Lukas Dong','dong','','Soraya',0,0,'B',1],['aliki','Aliki','Aliki Dong','dong','','Soraya',0,0,'C',1],
+    ['markr','Mark','Mark Romanov','romanov','','Soraya',0,0,'C',1],['gracie','Gracie','Gracie White','romanov','','Soraya',0,0,'C',1],
+    ['marine','Marine','Marine Vovard','vovard','','Soraya',0,0,'C',0]
+  ];
+  // Dietary: kind, restriction, true when the RSVP covers the party without naming who, true when severe
+  var D = {
+    soraya:['allergy','Nuts, except almonds, peanuts, and hazelnuts'], tristan:['allergy','Nuts, except almonds, peanuts, and hazelnuts'],
+    kimberly:['diet','Gluten free'],
+    jim:['diet','Gluten free',1], barbarag:['diet','Gluten free',1],
+    walt:['diet','No beets'], jennie:['diet','No chicken, no beets'],
+    wappy:['diet','Pescatarian, no dairy',1], louisa:['diet','Pescatarian, no dairy',1],
+    claire:['diet','Pescatarian',1], tomas:['diet','Pescatarian',1],
+    jasonm:['diet','Gluten free'],
+    kelly:['diet','Gluten free'],
+    liz:['diet','Vegan, but eats seafood'],
+    colleen:['diet','Pescatarian',1], griffin:['diet','Pescatarian',1],
+    saraw:['allergy','Shellfish'],
+    emily:['diet','Seafood only, no dairy'],
+    tess:['diet','Vegetarian'],
+    evren:['allergy','No dairy, egg, shellfish or soy. No cross-contamination; breastfeeding a severely allergic baby'],
+    gracie:['allergy','Severe peanut and tree nut; mild shellfish; no beef',0,1],
+    owend:['allergy','Dairy and eggs. Deathly allergic',0,1],
+    sarahp:['allergy','All alliums: garlic, onion, leek, chive, shallot, scallion'],
+    sammy:['allergy','Celiac, no gluten'],
+    michael:['diet','Vegetarian']
+  };
+  var FLAGS = {
+    hector:'Replacing Tamlorn Chase. No RSVP or name card yet.',
+    julia:'Not named on the guest list.', taylor:'Not named on the guest list.', magaly:'Not named on the guest list.'
+  };
+  // Chart layout, left to right as drawn; segs is how many 8' tables are pushed together
+  var L = [
+    {a:'t1',tables:[{n:1,segs:4,
+      top:'pete kimberly siena ruff jack tori barbie bjorn soraya naima tristan poppop barb annmarie mickey kimr',
+      bot:'kimj otto nico gro lisbeth trond thor stephen tatyana aziz bobby claudine rich andrew coles josh',
+      l:'mattp',r:'violet owenr'}]},
+    {a:'t2',tables:[{n:2,segs:2,top:'randy lisa walt jennie debbie blakej helen jeffc',bot:'matts chantal heidi kurt jim barbarag lara alan'}]},
+    {a:'floor'},
+    {a:'t3',tables:[{n:3,segs:2,top:'gary saraw taylor teddy christian colleen griffin julia',bot:'sarahp evren travis will molly morgan chris anna',l:'paula',r:'owend'}]},
+    {a:'t4',tables:[{n:4,segs:2,top:'tomas camila scott andreas jonas magaly benr louisa',bot:'claire jb liz jess jasonm mercy nate kk',r:'wappy'}]},
+    {a:'t5',tables:[{n:5,segs:2,top:'colel suza paulo sophia ellie jillian joseph emily',bot:'annie kev port nick tess hector daphne shamon',l:'dan',r:'jordyn'}]},
+    {a:'t6',tables:[{n:6,segs:2,top:'mike kelly pault dana jon parker rachel lindsay',bot:'ryanb sarahb bens karis jasonw morgans jordan tommy',l:'amanda',r:'dom'}]},
+    {a:'band'},
+    {a:'t7',tables:[{n:7,segs:2,top:'annm annalise lukas aliki markr gracie khaldoun marine',bot:'markl sammy jill esteban haley petef nicole jenna',l:'blakeh',r:'michael'}]}
+  ];
+
+  var byId = {}, order = [];
+  G.forEach(function(g){
+    byId[g[0]] = {id:g[0],label:g[1],full:g[2],party:g[3],card:g[4],noteBy:g[5],photo:g[6],written:g[7],pen:g[8],inGL:g[9],diet:D[g[0]]||null};
+  });
+  function ids(s){ return s ? s.split(' ') : []; }
+  function el(tag, cls, text){ var e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+  function link(a, b){ if(a && b){ a.nb.push(b); b.nb.push(a); } }
+
+  var room = document.getElementById('room'), seatNo = 0;
+  function seat(id, t){
+    var g = byId[id];
+    g.table = t; g.nb = g.nb || []; g.across = null; order.push(g);
+    var b = el('button', 'st' + (g.diet ? ' diet' + (g.diet[0] === 'allergy' ? ' allergy' : '') + (g.diet[3] ? ' severe' : '') : ''), g.label);
+    var longest = Math.max.apply(null, g.label.split(' ').map(function(w){ return w.length; }));
+    if(longest > 6) b.style.setProperty('--fs', (6.4 / longest).toFixed(2));
+    b.type = 'button'; b.dataset.id = id;
+    b.style.setProperty('--i', seatNo++);
+    b.setAttribute('aria-label', g.full + ', Table ' + t + (g.diet ? ', ' + g.diet[1] : ''));
+    g.el = b;
+    return b;
+  }
+  function table(t){
+    var top = ids(t.top), bot = ids(t.bot), l = ids(t.l), r = ids(t.r);
+    var sc = el('div', 'tscroll'), grid = el('div', 'tgrid'), rt = el('div', 'row top'), body = el('div', 'tbody'), rb = el('div', 'row bot');
+    top.forEach(function(id){ rt.appendChild(seat(id, t.n)); });
+    bot.forEach(function(id){ rb.appendChild(seat(id, t.n)); });
+    [['l', l], ['r', r]].forEach(function(e){
+      if(!e[1].length) return;
+      var end = el('div', 'end ' + e[0]);
+      e[1].forEach(function(id){ end.appendChild(seat(id, t.n)); });
+      body.appendChild(end);
+    });
+    for(var i = 1; i < t.segs; i++){ var s = el('i', 'seg'); s.style.left = (100 * i / t.segs) + '%'; body.appendChild(s); }
+    var all = top.concat(bot, l, r), nd = all.filter(function(id){ return byId[id].diet; }).length;
+    body.appendChild(el('b', null, 'Table ' + t.n));
+    body.appendChild(el('small', null, all.length + ' seats' + (nd ? ' · ' + nd + ' dietary' : '')));
+    if(Math.max(l.length, r.length) > 1) body.style.minHeight = 'calc(var(--seat) * ' + (Math.max(l.length, r.length) * 1.1 + .6) + ')';
+    grid.appendChild(rt); grid.appendChild(body); grid.appendChild(rb); sc.appendChild(grid);
+    // neighbours along each side, across the table, and at the ends
+    [top, bot].forEach(function(row){ for(var k = 1; k < row.length; k++) link(byId[row[k-1]], byId[row[k]]); });
+    top.forEach(function(id, k){ if(bot[k]){ byId[id].across = byId[bot[k]]; byId[bot[k]].across = byId[id]; } });
+    [[l, 0], [r, top.length - 1]].forEach(function(e){
+      var end = e[0], k = e[1];
+      if(!end.length) return;
+      link(byId[top[k]], byId[end[0]]);
+      for(var j = 1; j < end.length; j++) link(byId[end[j-1]], byId[end[j]]);
+      link(byId[end[end.length-1]], byId[bot[k]]);
+    });
+    return sc;
+  }
+  L.forEach(function(blk){
+    var box;
+    if(blk.a === 'floor'){
+      box = el('div', 'floor'); box.appendChild(el('div')); box.appendChild(el('span', null, 'Dance floor'));
+    } else if(blk.a === 'band'){
+      box = el('div', 'floor band');
+      box.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Band</span>';
+    } else {
+      box = el('div');
+      blk.tables.forEach(function(t){ box.appendChild(table(t)); });
+    }
+    box.dataset.a = blk.a;
+    room.appendChild(box);
+  });
+
+  var dietList = order.filter(function(g){ return g.diet; });
+  var nAll = dietList.filter(function(g){ return g.diet[0] === 'allergy'; }).length;
+  document.getElementById('seat-stats').innerHTML =
+    '<span><b>' + order.length + '</b>seated</span><span><b>' + room.querySelectorAll('.tbody').length + '</b>tables</span>' +
+    '<span><b>' + nAll + '</b>allergies</span><span><b>' + (dietList.length - nAll) + '</b>preferences</span>';
+
+  // guest card
+  var card = el('div', 'gcard'); card.setAttribute('role', 'tooltip'); card.id = 'gcard';
+  document.body.appendChild(card);
+  var cur = null, pinned = false;
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function row(k, v){ return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; }
+  function names(list){ return list.map(function(g){ return esc(g.full); }).join(', '); }
+  function render(g){
+    var p = P[g.party], h = '<div class="eyebrow">Table ' + g.table + '</div><h3>' + esc(g.full) + '</h3>';
+    if(g.card) h += '<div class="muted">Name card: ' + esc(g.card) + '</div>';
+    if(g.diet){
+      h += '<div class="dbox ' + g.diet[0] + '"><strong>' + (g.diet[3] ? 'Severe allergy' : g.diet[0] === 'allergy' ? 'Allergy' : 'Preference') + ':</strong> ' + esc(g.diet[1]) +
+        (g.diet[2] ? '<div class="n" style="color:inherit;opacity:.8">RSVP covers the party; didn&#39;t say who</div>' : '') + '</div>';
+    }
+    if(FLAGS[g.id]) h += '<div class="flag">' + esc(FLAGS[g.id]) + '</div>';
+    h += '<dl>';
+    if(p){
+      var mates = order.filter(function(o){ return o.party === g.party && o !== g; });
+      h += row('Invite', esc(p[0]) + ' <span class="muted">· ' + esc(p[1]) + '</span>');
+      if(mates.length) h += row('With', names(mates));
+      h += row('RSVP', 'Yes' + (p[2] ? ', ' + p[2] : ''));
+      h += row('Welcome party', p[3] === 'yes' ? 'Yes' : 'No');
+      h += row('Shuttle', p[4] === 'yes' ? 'Yes' : 'No');
+      if(p[5]) h += row('RSVP note', '<i>&ldquo;' + esc(p[5]) + '&rdquo;</i>');
+    }
+    if(g.id !== 'hector'){
+      var c = 'Made' + (g.pen ? ' · pen ' + esc(g.pen) : '');
+      h += row('Name card', c);
+      if(g.noteBy) h += row('Note', 'From ' + g.noteBy + (g.photo ? ' · photo ✓' : '') + (g.written ? ' · written ✓' : ' · not written yet'));
+    }
+    h += row('Next to', names(g.nb));
+    if(g.across) h += row('Across', esc(g.across.full));
+    card.innerHTML = h + '</dl>';
+  }
+  function place(){
+    if(!cur) return;
+    var r = cur.el.getBoundingClientRect(), w = card.offsetWidth, ht = card.offsetHeight;
+    var x = Math.max(12, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 12));
+    var y = r.top - ht - 12;
+    if(y < 12) y = r.bottom + 12;
+    if(y + ht > innerHeight - 12) y = Math.max(12, innerHeight - ht - 12);
+  
+    card.style.left = x + 'px'; card.style.top = y + 'px';
+  }
+  function mark(g, on){
+    g.el.classList.toggle('cur', on);
+    if(!g.party) return;
+    order.forEach(function(o){ if(o !== g && o.party === g.party) o.el.classList.toggle('mate', on); });
+  }
+  function show(g){
+    if(cur) mark(cur, false);
+    cur = g; mark(g, true); render(g); place();
+    card.classList.add('on');
+  }
+  function hide(){
+    if(cur) mark(cur, false);
+    cur = null; pinned = false; card.classList.remove('on');
+  }
+  room.addEventListener('pointerover', function(e){
+    var b = e.target.closest('.st'); if(!b || e.pointerType !== 'mouse' || pinned) return;
+    show(byId[b.dataset.id]);
+  });
+  room.addEventListener('pointerout', function(e){
+    var b = e.target.closest('.st'); if(!b || e.pointerType !== 'mouse' || pinned) return;
+    if(!b.contains(e.relatedTarget)) hide();
+  });
+  room.addEventListener('click', function(e){
+    var b = e.target.closest('.st'); if(!b) return;
+    var g = byId[b.dataset.id];
+    if(pinned && cur === g){ hide(); return; }
+    show(g); pinned = true;
+  });
+  room.addEventListener('focusin', function(e){ var b = e.target.closest('.st'); if(b && !pinned) show(byId[b.dataset.id]); });
+  room.addEventListener('focusout', function(e){ if(!pinned && !room.contains(e.relatedTarget)) hide(); });
+  document.addEventListener('click', function(e){ if(pinned && !e.target.closest('.st') && !e.target.closest('#diet-rows')) hide(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hide(); });
+  window.addEventListener('scroll', place, {passive:true, capture:true});
+  window.addEventListener('resize', place);
+  window.addEventListener('hashchange', hide);
+
+  // search and dietary filter
+  var q = document.getElementById('seat-q'), dietBtn = document.getElementById('seat-diet'), found = document.getElementById('seat-found');
+  function norm(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+  order.forEach(function(g){ g.key = norm(g.full + ' ' + g.label + ' ' + (g.card || '')); });
+  function filter(){
+    var s = norm(q.value.trim()), dOnly = dietBtn.getAttribute('aria-pressed') === 'true', n = 0;
+    order.forEach(function(g){
+      var hit = !!s && g.key.indexOf(s) > -1;
+      if(hit) n++;
+      g.el.classList.toggle('hit', hit);
+      g.el.classList.toggle('dim', (!!s && !hit) || (dOnly && !g.diet));
+    });
+    found.textContent = s ? (n === 1 ? '1 match' : n + ' matches') : '';
+  }
+  q.addEventListener('input', filter);
+  q.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    var g = order.filter(function(o){ return o.el.classList.contains('hit'); })[0];
+    if(g) focusSeat(g);
+  });
+  dietBtn.addEventListener('click', function(){
+    dietBtn.setAttribute('aria-pressed', dietBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+    filter();
+  });
+  function focusSeat(g){
+    g.el.scrollIntoView({block:'center', inline:'center', behavior:'smooth'});
+    g.el.focus({preventScroll:true});
+    show(g); pinned = true;
+  }
+
+  // dietary table
+  var tb = document.getElementById('diet-rows');
+  dietList.forEach(function(g){
+    var tr = el('tr'), p = P[g.party];
+    tr.innerHTML = '<td class="num">' + g.table + '</td><td>' + esc(g.full) + '</td><td>' +
+      '<span class="chip ' + (g.diet[0] === 'allergy' ? 'rem' : 'move') + '">' + (g.diet[3] ? 'Severe allergy' : g.diet[0] === 'allergy' ? 'Allergy' : 'Preference') + '</span> ' + esc(g.diet[1]) +
+      '</td><td class="muted">' + (p && p[5] ? esc(p[5]) : '') + '</td>';
+    tr.addEventListener('click', function(){ focusSeat(g); });
+    tr.addEventListener('mouseenter', function(){ g.el.classList.add('hit'); });
+    tr.addEventListener('mouseleave', function(){ if(!q.value) g.el.classList.remove('hit'); });
+    tb.appendChild(tr);
+  });
 })();
 </script>
 </body>
