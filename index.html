@@ -173,6 +173,45 @@ footer{color:var(--muted);font-size:13px}
 @media (min-width:1280px){.room{grid-template-columns:minmax(0,1fr) minmax(120px,170px) minmax(0,1fr);grid-template-areas:"t1 t1 t1" "t2 floor t3" "t4 floor t5" "t6 band t7"}}
 @media (max-width:640px){.room{--seat:42px;padding:20px 8px}.legend{margin-left:0}}
 @media (prefers-reduced-motion: reduce){.st,.gcard{animation:none;transition:none}}
+/* Layout: plans are drawn in feet; --ft is pixels per foot, set by the zoom buttons */
+.scenes{display:flex;gap:6px}
+.scenes .toggle[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.zoom{display:flex;gap:6px}
+.pscroll{--ft:14;overflow:auto;max-height:80vh;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px}
+.plan{--seat:calc(var(--ft)*1.7*1px);position:relative;flex:none;margin-inline:auto;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:calc(var(--ft)*10*1px) calc(var(--ft)*10*1px)}
+.plan[hidden]{display:none}
+.plan .st{position:absolute;margin:calc(var(--seat)/-2) 0 0 calc(var(--seat)/-2);animation:none}
+.pscroll:not(.names) .plan .st{font-size:0}
+.st.fw{border-style:dashed}
+.it{position:absolute;display:grid;place-items:center;padding:0;border:1.5px solid var(--seat-line);border-radius:3px;background:var(--surface);color:var(--fg);font:600 11px/1.1 var(--body);text-align:center;cursor:pointer;overflow:hidden}
+.it.sh{background:var(--chip-move);border-color:var(--move)}
+.it.tm{background:var(--chip-off);border-color:var(--muted)}
+.it.own{background:var(--chip-bluff);border-color:var(--bluff)}
+.it.fix{background:var(--bg);border-color:var(--seat-line)}
+.it.new{background:transparent;border-style:dashed;border-color:var(--muted)}
+.it.round{border-radius:50%}
+.it.ch{border-radius:2px;font-size:0;border-width:1px}
+.it:hover,.it.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);z-index:3}
+.it.mate{outline:2px dashed var(--accent);outline-offset:1px}
+.it.hit{box-shadow:0 0 0 3px var(--accent);z-index:3}
+.it.dim{opacity:.25}
+.it:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wall{position:absolute;border:3px solid var(--fg);border-radius:2px;pointer-events:none}
+.gap{position:absolute;background:var(--surface);pointer-events:none}
+.dimh,.dimv{position:absolute;pointer-events:none;border:0 solid var(--muted)}
+.dimh{border-top-width:1.5px}
+.dimv{border-left-width:1.5px}
+.zone{position:absolute;border:1.5px dashed var(--muted);pointer-events:none}
+.tag{position:absolute;font:600 12px/1 var(--body);color:var(--muted);white-space:nowrap;pointer-events:none}
+.tlab{position:absolute;display:grid;place-items:center;font:700 max(11px,calc(var(--ft)*1.1*1px))/1 var(--display);letter-spacing:.06em;text-transform:uppercase;pointer-events:none;z-index:2;writing-mode:vertical-rl;transform:rotate(180deg)}
+.sbar{position:absolute;height:6px;border:1.5px solid var(--fg);border-top:0;font:600 11px/1 var(--body);color:var(--muted)}
+.sbar span{position:absolute;left:calc(100% + 6px);bottom:-3px;white-space:nowrap}
+.legend i.sq{border-radius:3px}
+.legend i.sh{background:var(--chip-move);border-color:var(--move)}
+.legend i.tm{background:var(--chip-off);border-color:var(--muted)}
+.legend i.own{background:var(--chip-bluff);border-color:var(--bluff)}
+.legend i.new{border-style:dashed;border-color:var(--muted)}
+.legend i.fw{border-style:dashed}
 </style>
 </head>
 <body>
@@ -185,12 +224,14 @@ footer{color:var(--muted);font-size:13px}
 
 <nav class="tabs" role="tablist" aria-label="Sections">
   <button role="tab" id="tab-overview" aria-controls="overview" aria-selected="true">Overview</button>
-  <button role="tab" id="tab-todo" aria-controls="todo" aria-selected="false">To do</button>
   <button role="tab" id="tab-seating" aria-controls="seating" aria-selected="false">Seating</button>
+  <button role="tab" id="tab-layout" aria-controls="layout" aria-selected="false">Layout</button>
   <button role="tab" id="tab-placement" aria-controls="placement" aria-selected="false">Placement</button>
   <button role="tab" id="tab-alcohol" aria-controls="alcohol" aria-selected="false">Alcohol</button>
   <button role="tab" id="tab-order" aria-controls="order" aria-selected="false">To order</button>
   <button role="tab" id="tab-inventory" aria-controls="inventory" aria-selected="false">Rental inventory</button>
+  <button role="tab" id="tab-shuttles" aria-controls="shuttles" aria-selected="false">Shuttles</button>
+  <button role="tab" id="tab-todo" aria-controls="todo" aria-selected="false">To do</button>
 </nav>
 
 <!-- ============ OVERVIEW ============ -->
@@ -284,86 +325,6 @@ footer{color:var(--muted);font-size:13px}
   </section>
 </div>
 
-<!-- ============ TO DO ============ -->
-<div class="panel" id="todo" role="tabpanel" aria-labelledby="tab-todo" hidden>
-  <p class="muted">Checks save in this browser only. <span id="todo-count"></span></p>
-  <section>
-    <h2>This weekend <span class="muted h2d">Sat Oct 10 to Sun Oct 11</span></h2>
-    <ul class="todos">
-      <li><label><input type="checkbox" data-id="vows"><span class="txt">Write vows</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pens"><span class="txt">Finish the pens</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-1"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="rsvp-email"><span class="txt">Send the info email to everyone confirming their RSVP details</span><span></span></label></li>
-    </ul>
-  </section>
-  <section>
-    <h2>Next week <span class="muted h2d">Oct 12 to 17</span></h2>
-    <ul class="todos">
-      <li><label><input type="checkbox" data-id="license"><span class="txt">Get the marriage license</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-2"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="placard-base"><span class="txt">Get a base for the seating chart sign</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-kk"><span class="txt">Pay KK Catering balance</span><span class="due">Wed Oct 14</span></label></li>
-      <li><label><input type="checkbox" data-id="pay-tm"><span class="txt">Pay the Tent Merchant balance</span><span class="due">Sat Oct 17, noon</span></label></li>
-      <li><label><input type="checkbox" data-id="pay-bus"><span class="txt">Pay Bill's Bus balance</span><span class="due">Sat Oct 17</span></label></li>
-      <li><label><input type="checkbox" data-id="diagram"><span class="txt">Send the final diagram to Tent Merchant</span><span class="due">Sat Oct 17, noon</span></label></li>
-      <li><label><input type="checkbox" data-id="pay-tj"><span class="txt">Pay Thomas &amp; Jocelyn for shared rentals <span class="n">Not on the vendor payment schedule yet</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-spark"><span class="txt">Confirm the SPARK payment <span class="n">Not on the vendor payment schedule</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="dp-deposit"><span class="txt">Check the Dos Pueblos security deposit <span class="n">The sheet shows it unpaid; it was due Aug 24</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="na"><span class="txt">Order the N/A drinks <span class="n">Athletic N/A beer, N/A margarita, sparkling water, lemonade</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="signs"><span class="txt">Finish signage <span class="n">Restroom signs, guest book, card box, reserved family seats; Tori&#39;s extra table numbers</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="bouchon"><span class="txt">Follow up on Friday Bouchon RSVPs <span class="n">17 of 38 confirmed</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="shotlist"><span class="txt">Send the shot list to the photographer <span class="n">Draft is on the RUN OF SHOW tab</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="move-crew"><span class="txt">Line up the move crew for cocktail hour <span class="n">Loads chairs, cocktail tables, and trash cans into the truck and U-Haul</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="caterer-tasks"><span class="txt">Go over the work timeline with the caterer <span class="n">Confirm the tasks tagged Servers, Bartenders, and Kitchen on Overview</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="vendor-times"><span class="txt">Confirm vendor arrival times <span class="n">Catering, DJ, Spread Eagle, shuttles, photographer</span></span><span></span></label></li>
-    </ul>
-  </section>
-  <section>
-    <h2>Week of <span class="muted h2d">Oct 19 to 23</span></h2>
-    <ul class="todos">
-      <li><label><input type="checkbox" data-id="uhaul"><span class="txt">Get the U-Haul</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="flowers"><span class="txt">Buy flowers at the wholesaler in Oxnard</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-3"><span class="txt">Write 25 welcome notes</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="wp-booze"><span class="txt">Buy alcohol for the welcome party</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="wp-charc"><span class="txt">Buy charcuterie for the welcome party</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="thanks-speech"><span class="txt">Write the thank-you speech for the wedding</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="welcome-speech"><span class="txt">Write the welcome speech for the welcome party</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="kit"><span class="txt">Pack the day-of kit <span class="n">Rings, vows, speech, vendor tip envelopes, wine and bottle openers, card box</span></span><span></span></label></li>
-    </ul>
-  </section>
-  <section>
-    <h2>Day before <span class="muted h2d">Fri Oct 23</span></h2>
-    <ul class="todos">
-      <li><label><input type="checkbox" data-id="arrange"><span class="txt">Put the flowers together</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="house"><span class="txt">Prep the house for the welcome party</span><span></span></label>
-        <ul class="sub">
-          <li><label><input type="checkbox" data-id="house-lights"><span class="txt">Hang string lights</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-leaves"><span class="txt">Blow leaves</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-tables"><span class="txt">Set up tables and linens <span class="n">4 high-tops from Lisa White</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-furniture"><span class="txt">Set out the outdoor furniture</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-toilet"><span class="txt">Confirm the restroom trailer is delivered <span class="n">VIP Restroom</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-bar"><span class="txt">Ice down the beer and wine; set out cups <span class="n">24 bottles of Alamati</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-charcuterie"><span class="txt">Set out charcuterie</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-speaker"><span class="txt">Bluetooth speaker and playlist</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-cornhole"><span class="txt">Set up corn hole</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-sign"><span class="txt">Put out the welcome sign</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-trash"><span class="txt">Trash and recycling bins</span><span></span></label></li>
-        </ul>
-      </li>
-    </ul>
-  </section>
-  <section>
-    <h2>After <span class="muted h2d">Sun Oct 25 to Mon Oct 26</span></h2>
-    <ul class="todos">
-      <li><label><input type="checkbox" data-id="brunch"><span class="txt">Sunday beach brunch, 11 to 1 <span class="n">Coffee, bagels, donuts</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pickup"><span class="txt">Tent Merchant pick-up <span class="n">Teardown checklist is on Placement</span></span><span class="due">Mon, 8 am to 5 pm</span></label></li>
-      <li><label><input type="checkbox" data-id="return-uhaul"><span class="txt">Return the U-Haul</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards</span><span></span></label></li>
-    </ul>
-  </section>
-</div>
-
 <!-- ============ SEATING ============ -->
 <div class="panel" id="seating" role="tabpanel" aria-labelledby="tab-seating" hidden>
   <section>
@@ -388,6 +349,36 @@ footer{color:var(--muted);font-size:13px}
       <thead><tr><th>Table</th><th>Guest</th><th>Restriction</th><th>RSVP note</th></tr></thead>
       <tbody id="diet-rows"></tbody>
     </table>
+    </div>
+  </section>
+</div>
+
+<!-- ============ LAYOUT ============ -->
+<div class="panel" id="layout" role="tabpanel" aria-labelledby="tab-layout" hidden>
+  <section>
+    <h2>Floor plans to scale</h2>
+    <p class="meta">Traced from Jo's Oct 15 layouts. Greenhouse is 120' x 50', ceremony pad is 40' x 40', grid squares are 10'. Hover or tap anything for details; guest seats match the Seating tab. Bluff chairs are 16" wide at 18" spacing, in 3' rows with a 5' aisle.</p>
+    <div class="stat" id="lay-stats"></div>
+    <div class="stage">
+      <div class="seatbar">
+        <div class="scenes" role="group" aria-label="Plan">
+          <button type="button" class="toggle" data-scene="gh" aria-pressed="true">Greenhouse</button>
+          <button type="button" class="toggle" data-scene="bluff" aria-pressed="false">Bluff</button>
+        </div>
+        <input type="search" id="lay-q" placeholder="Find a guest or item" aria-label="Find a guest or item" autocomplete="off">
+        <button type="button" class="toggle" id="lay-diet" aria-pressed="false">Allergies and preferences</button>
+        <span class="found" id="lay-found" aria-live="polite"></span>
+        <div class="zoom" role="group" aria-label="Zoom">
+          <button type="button" class="toggle" id="lay-out" aria-label="Zoom out">&minus;</button>
+          <button type="button" class="toggle" id="lay-in" aria-label="Zoom in">+</button>
+          <button type="button" class="toggle" id="lay-fit">Fit width</button>
+        </div>
+      </div>
+      <div class="legend" style="margin-left:0">
+        <span><i class="sq sh"></i>Shared rental</span><span><i class="sq tm"></i>Tent Merchant</span><span><i class="sq own"></i>Vendor or ours</span><span><i class="sq new"></i>Proposed, not on Jo's layout</span>
+        <span><i class="fw"></i>Fruitwood chair from the bluff</span><span><i class="d"></i>Preference</span><span><i class="a"></i>Allergy</span>
+      </div>
+      <div class="pscroll" id="pscroll"><div id="planbox" style="display:flex"></div></div>
     </div>
   </section>
 </div>
@@ -764,7 +755,159 @@ footer{color:var(--muted);font-size:13px}
   </section>
 </div>
 
-<footer>Last updated Oct 12, 2026.</footer>
+<!-- ============ SHUTTLES ============ -->
+<div class="panel" id="shuttles" role="tabpanel" aria-labelledby="tab-shuttles" hidden>
+  <section>
+    <h2>Shuttles</h2>
+    <p class="meta">Bill's Bus: 2 x 39-passenger and 1 x 30-passenger, 108 seats. Riders come from the RSVPs on the Guest List tab; the Rodriguez group (4) is now driving. Bill's Bus cannot do para transit, so the guest in a wheelchair needs another ride.</p>
+    <div class="stat" id="shut-stats"></div>
+    <p class="muted" id="shut-note"></p>
+  </section>
+  <section>
+    <h2>Schedule</h2>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th class="num">When</th><th>What</th></tr></thead>
+      <tbody>
+        <tr><td class="num">2:00</td><td>Buses arrive at State + Cota <span class="n">Drivers can go around the block and start loading at 2:20 if staging is a problem</span></td></tr>
+        <tr><td class="num">2:30</td><td>Buses leave</td></tr>
+        <tr><td class="num">3:00</td><td>Arrive at Orchid Farm; drop-off on the bluff</td></tr>
+        <tr><td class="num">After</td><td>Return trips: TBD with Bill's Bus</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section>
+    <h2>Who is riding</h2>
+    <div class="seatbar">
+      <input type="search" id="shut-q" placeholder="Find a guest" aria-label="Find a guest" autocomplete="off">
+      <div class="scenes" role="group" aria-label="Filter">
+        <button type="button" class="toggle" data-mode="all" aria-pressed="true">All</button>
+        <button type="button" class="toggle" data-mode="yes" aria-pressed="false">Shuttle</button>
+        <button type="button" class="toggle" data-mode="no" aria-pressed="false">Driving</button>
+        <button type="button" class="toggle" data-mode="?" aria-pressed="false">Not on the list</button>
+      </div>
+      <span class="found" id="shut-found" aria-live="polite"></span>
+    </div>
+    <div class="tablewrap">
+    <table>
+      <thead><tr><th>Invite</th><th class="num">Guests</th><th>Seated at</th><th>Welcome party</th><th>Getting there</th></tr></thead>
+      <tbody id="shuttle-rows"></tbody>
+    </table>
+    </div>
+  </section>
+</div>
+
+<!-- ============ TO DO ============ -->
+<div class="panel" id="todo" role="tabpanel" aria-labelledby="tab-todo" hidden>
+  <section>
+    <h2>Today <span class="muted h2d">Sun Oct 18</span></h2>
+    <p class="muted">Checks save in this browser only. <span id="todo-count"></span></p>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="pay-kk"><span class="txt">Pay KK Catering balance</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-bus"><span class="txt">Pay Bill&#39;s Bus balance</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="bus-port"><span class="txt">Check in with Port about Bill&#39;s Bus</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-wappy"><span class="txt">Pay back Wappy for the officiant cost</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="ledger"><span class="txt">Update the ledger and budget</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="diagram"><span class="txt">Send the final diagram to Tent Merchant</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Monday <span class="muted h2d">Oct 19</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="license"><span class="txt">Get the marriage license</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="license-off"><span class="txt">Get the officiant license</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="shotlist"><span class="txt">Send the shot list to the photographer <span class="n">Draft is on the RUN OF SHOW tab</span></span><span><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="kk-bar"><span class="txt">Check in with KK about what else is needed for the bar to order</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-6-1"><span class="txt">Write notes for table 6-1</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Tuesday <span class="muted h2d">Oct 20</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="crew"><span class="txt">Figure out the setup crew for Saturday</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="shuttle-final"><span class="txt">Finalize the shuttles <span class="n">Who is driving, who is on the bus, and return trips; see the Shuttles tab</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-6-2"><span class="txt">Write notes for table 6-2</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Wednesday <span class="muted h2d">Oct 21</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="thanks-speech"><span class="txt">Write the thank-you speech for the wedding</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="flowers-design"><span class="txt">Design the flowers</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-5-1"><span class="txt">Write notes for table 5-1</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Thursday <span class="muted h2d">Oct 22</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="welcome-speech"><span class="txt">Write the welcome speech for the welcome party</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="flowers"><span class="txt">Go to Oxnard for flowers</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="drinks"><span class="txt">Get beer for the welcome party, and N/A drinks and sparkling water for the wedding <span class="n">Athletic N/A beer, N/A margarita, sparkling water, lemonade</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="placard-base"><span class="txt">Get a base for the seating chart sign</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="signs"><span class="txt">Finish signage <span class="n">Restroom signs, guest book, card box, reserved family seats; Tori&#39;s extra table numbers</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-5-2"><span class="txt">Write notes for table 5-2</span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Friday <span class="muted h2d">Oct 23</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="uhaul"><span class="txt">Pick up the U-Haul</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="boat"><span class="txt">Take the boat to the harbor</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="house"><span class="txt">Set up the house for the welcome party</span><span></span></label>
+        <ul class="sub">
+          <li><label><input type="checkbox" data-id="house-lights"><span class="txt">Hang string lights</span><span><span class="chip gh">Soraya</span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-leaves"><span class="txt">Blow leaves</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-toilet"><span class="txt">Receive the restroom trailer <span class="n">VIP Restroom</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-move-tables"><span class="txt">Move tables</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-tables"><span class="txt">Set up tables and linens <span class="n">4 high-tops from Lisa White</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-furniture"><span class="txt">Set out the outdoor furniture</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-bar"><span class="txt">Ice down the beer and wine; set out cups <span class="n">24 bottles of Alamati</span></span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-charcuterie"><span class="txt">Set out charcuterie</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-speaker"><span class="txt">Bluetooth speaker and playlist</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-cornhole"><span class="txt">Set up corn hole</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-sign"><span class="txt">Put out the welcome sign</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-trash"><span class="txt">Trash and recycling bins</span><span></span></label></li>
+        </ul>
+      </li>
+      <li><label><input type="checkbox" data-id="wp-charc"><span class="txt">Buy charcuterie</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="arrange"><span class="txt">Put the flowers together <span class="n">With Morgan</span></span><span><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="kit"><span class="txt">Pack the day-of kit <span class="n">Rings, vows, speech, vendor tip envelopes, wine and bottle openers, card box</span></span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>Wedding day <span class="muted h2d">Sat Oct 24</span></h2>
+    <p class="muted">The work timeline is on Overview and the teardown checklist is on Placement.</p>
+  </section>
+  <section>
+    <h2>Not yet scheduled <span class="muted h2d"></span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="vows"><span class="txt">Write vows</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pens"><span class="txt">Finish the pens</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="rsvp-email"><span class="txt">Send the info email to everyone confirming their RSVP details</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tm"><span class="txt">Pay the Tent Merchant balance</span><span class="due">Sat Oct 17, noon</span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tj"><span class="txt">Pay Thomas &amp; Jocelyn for shared rentals <span class="n">Not on the vendor payment schedule yet</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-spark"><span class="txt">Confirm the SPARK payment <span class="n">Not on the vendor payment schedule</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="dp-deposit"><span class="txt">Check the Dos Pueblos security deposit <span class="n">The sheet shows it unpaid; it was due Aug 24</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="bouchon"><span class="txt">Follow up on Friday Bouchon RSVPs <span class="n">17 of 38 confirmed</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="move-crew"><span class="txt">Line up the move crew for cocktail hour <span class="n">Loads chairs, cocktail tables, and trash cans into the truck and U-Haul</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="caterer-tasks"><span class="txt">Go over the work timeline with the caterer <span class="n">Confirm the tasks tagged Servers, Bartenders, and Kitchen on Overview</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="vendor-times"><span class="txt">Confirm vendor arrival times <span class="n">Catering, DJ, Spread Eagle, shuttles, photographer</span></span><span></span></label></li>
+    </ul>
+  </section>
+  <section>
+    <h2>After <span class="muted h2d">Sun Oct 25 to Mon Oct 26</span></h2>
+    <ul class="todos">
+      <li><label><input type="checkbox" data-id="brunch"><span class="txt">Sunday beach brunch, 11 to 1 <span class="n">Coffee, bagels, donuts</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pickup"><span class="txt">Tent Merchant pick-up <span class="n">Teardown checklist is on Placement</span></span><span class="due">Mon, 8 am to 5 pm</span></label></li>
+      <li><label><input type="checkbox" data-id="return-uhaul"><span class="txt">Return the U-Haul</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards</span><span></span></label></li>
+    </ul>
+  </section>
+</div>
+
+<footer>Last updated Oct 16, 2026.</footer>
 </div>
 
 <script>
@@ -842,7 +985,7 @@ footer{color:var(--muted);font-size:13px}
     bobby:['Bobby Simi, Claudine, Mickey, Cole','Simi family','7/19','yes','yes',''],
     cummings:['Ann Marie & Andrew Cummings','Simi family','7/17','yes','yes',''],
     hession:['Barbara & Rich Hession','Simi family','7/6','yes','no',''],
-    rodriguez:['Kim & Josh Rodriguez (plus Violet & Owen)','Simi family','6/16','yes','yes',''],
+    rodriguez:['Kim & Josh Rodriguez (plus Violet & Owen)','Simi family','6/16','yes','no',''],
     swegar:['Matt and Chantal Swegar','Simi family','8/1','yes','yes',''],
     wapner:['Jeff and Louisa Wapner','Bjorn close','6/26','yes','yes','Fish yes, meat and dairy no :)'],
     garrison:['Nathan and Katherine Garrison','Bjorn close','7/12','yes','yes',''],
@@ -893,7 +1036,7 @@ footer{color:var(--muted);font-size:13px}
     lang:['The Lang Gang','Remaining','8/23','no','no','My sister (Sammy Lang) has celiac'],
     white:['Lisa & Randy White','Remaining','9/9','yes','no',''],
     fields:['Nick Fields','Remaining','8/4','yes','yes',''],
-    agonias:['Jill Agonias & Estebon Balikian','Remaining','9/12','yes','no',''],
+    agonias:['Jill Agonias & Estabon Balikian','Remaining','9/12','yes','no',''],
     vovard:['Marine Vovard','Remaining','9/10','yes','yes',''],
     shamon:['Shamon Walker','Remaining','8/21','yes','yes','Yeeeeeeeew!!'],
     jpeterson:['Jenna Peterson','Remaining','9/23','yes','yes',''],
@@ -942,8 +1085,8 @@ footer{color:var(--muted);font-size:13px}
     ['wappy','Wappy','Jeff Wapner','wapner','','Bjorn',1,0,'A',1],['louisa','Louisa','Louisa Kimble','wapner','','Bjorn',1,0,'A',1],
     ['nate','Nate','Nathan Garrison','garrison','','Bjorn',1,0,'A',1],['kk','KK','Katherine Knowlton','garrison','','Bjorn',1,0,'B',1],
     ['benr','Ben','Ben Rudolph','rudolph','','Bjorn',1,0,'B',1],['mercy','Mercy','Mercy Rudolph','rudolph','','Bjorn',1,0,'B',1],
-    ['jonas','Jonas','Jonas Nauerz','jonas','','Bjorn',1,0,'B',1],['magaly','Magali','Magaly Sáenz Somarriba','','','Bjorn',0,0,'B',1],
-    ['andreas','Andres','Andreas Orset','orset','','Bjorn',1,0,'B',1],
+    ['jonas','Jonas','Jonas Nauerz','jonas','','Bjorn',1,0,'B',1],['magaly','Magaly','Magaly Sáenz Somarriba','','','Bjorn',0,0,'B',1],
+    ['andreas','Andreas','Andreas Orset','orset','','Bjorn',1,0,'B',1],
     ['scott','Scott','Scott Ball','ball','','Bjorn',1,1,'B',1],['liz','Liz','Liz Ball','ball','','Bjorn',1,1,'B',1],
     ['jb','JB','John Brock','jb','','Bjorn',1,0,'B',1],['camila','Camila','Camila Vargas Poulsen','jb','','Bjorn',1,0,'B',1],
     ['claire','Claire','Claire Howard','howard','','Bjorn',0,0,'B',1],['tomas','Tomas','Tomas Asmann','howard','','Bjorn',0,0,'B',1],
@@ -959,7 +1102,7 @@ footer{color:var(--muted);font-size:13px}
     ['daphne','Daphne','Daphne Armstrong','daphne','','Soraya',0,0,'B',1],['tess','Tess','Tess McCormick','tess','','Soraya',0,0,'C',1],
     ['jordyn','Jordyn','Jordyn Romero','jordyn','','Soraya',0,0,'B',1],['jillian','Jillian','Jillian Gubler','jillian','','Soraya',0,0,'C',1],
     ['joseph','Joseph','Joseph DeRose','derose','','Soraya',0,0,'B',1],['shamon','Shamon','Shamon Walker','shamon','','Bjorn',1,0,'C',1],
-    ['hector','Hector','Hector Kielbock','','','',0,0,'',0],
+    ['hector','Hector','Hector Kielblock','','','',0,0,'',0],
 
     ['pault','Paul','Paul Tannenbaum','tann','','Bjorn',1,0,'B',1],['kelly','Kelly','Kelly Dean','tann','','Bjorn',1,0,'C',1],
     ['jon','Jon','Jon Menzies','menzies','','Bjorn',1,0,'B',1],['dana','Dana','Dana Menzies','menzies','','Bjorn',1,0,'C',1],
@@ -974,7 +1117,7 @@ footer{color:var(--muted);font-size:13px}
     ['tommy','Tommy','Tommy Riparetti','riparetti','','Bjorn',1,0,'S-SE',1],['jordan','Jordan','Jordan Riparetti','riparetti','','Bjorn',0,0,'C',1],
 
     ['blakeh','Blake','Blake Horsley','horsley','','Soraya',0,0,'B',1],['annm','Ann','Ann Molin','horsley','','Soraya',0,0,'C',1],
-    ['jill','Jill','Jill Agonias','agonias','','Soraya',0,0,'B',0],['esteban','Esteban','Estebon Balikian','agonias','','Soraya',0,0,'C',0],
+    ['jill','Jill','Jill Agonias','agonias','','Soraya',0,0,'B',0],['esteban','Estabon','Estabon Balikian','agonias','','Soraya',0,0,'C',0],
     ['annalise','Annalise','Annalise Pasztor','pasztor','','Soraya',0,0,'C',1],
     ['sammy','Sammy','Sammy Lang','lang','','Soraya',0,0,'C',1],['markl','Mark','Mark Lang','lang','','Soraya',0,0,'C',1],
     ['jenna','Jenna','Jenna Peterson','jpeterson','','Soraya',0,0,'B',1],['michael','Michael','Michael B. Karman','karman','','Soraya',0,0,'C',1],
@@ -1018,14 +1161,14 @@ footer{color:var(--muted);font-size:13px}
     {a:'t2',tables:[{n:2,segs:2,top:'randy lisa walt jennie debbie blakej helen jeffc',bot:'matts chantal heidi kurt jim barbarag lara alan'}]},
     {a:'floor'},
     {a:'t3',tables:[{n:3,segs:2,top:'gary saraw taylor teddy christian colleen griffin julia',bot:'sarahp evren travis will molly morgan chris anna',l:'paula',r:'owend'}]},
-    {a:'t4',tables:[{n:4,segs:2,top:'tomas camila scott andreas jonas magaly benr louisa',bot:'claire jb liz jess jasonm mercy nate kk',r:'wappy'}]},
-    {a:'t5',tables:[{n:5,segs:2,top:'colel suza paulo sophia ellie jillian joseph emily',bot:'annie kev port nick tess hector daphne shamon',l:'dan',r:'jordyn'}]},
+    {a:'t4',tables:[{n:4,segs:2,top:'camila scott andreas jasonm jonas magaly benr louisa',bot:'claire jb liz jess daphne mercy nate kk',l:'tomas',r:'wappy'}]},
+    {a:'t5',tables:[{n:5,segs:2,top:'colel suza paulo sophia ellie jillian joseph emily',bot:'annie kev port nick dan tess hector shamon',r:'jordyn'}]},
     {a:'t6',tables:[{n:6,segs:2,top:'mike kelly pault dana jon parker rachel lindsay',bot:'ryanb sarahb bens karis jasonw morgans jordan tommy',l:'amanda',r:'dom'}]},
     {a:'band'},
     {a:'t7',tables:[{n:7,segs:2,top:'annm annalise lukas aliki markr gracie khaldoun marine',bot:'markl sammy jill esteban haley petef nicole jenna',l:'blakeh',r:'michael'}]}
   ];
 
-  var byId = {}, order = [];
+  var byId = {}, order = [], items = [], itemById = {};
   G.forEach(function(g){
     byId[g[0]] = {id:g[0],label:g[1],full:g[2],party:g[3],card:g[4],noteBy:g[5],photo:g[6],written:g[7],pen:g[8],inGL:g[9],diet:D[g[0]]||null};
   });
@@ -1103,7 +1246,12 @@ footer{color:var(--muted);font-size:13px}
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function row(k, v){ return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; }
   function names(list){ return list.map(function(g){ return esc(g.full); }).join(', '); }
+  function renderItem(o){
+    var h = '<div class="eyebrow">' + SC[o.scene] + '</div><h3>' + esc(o.name) + '</h3><dl>' + row('Source', KIND[o.kind]) + row('Qty', o.qty ? esc(o.qty) : '') + row('Note', o.note ? esc(o.note) : '');
+    card.innerHTML = h + '</dl>';
+  }
   function render(g){
+    if(g.item) return renderItem(g);
     var p = P[g.party], h = '<div class="eyebrow">Table ' + g.table + '</div><h3>' + esc(g.full) + '</h3>';
     if(g.card) h += '<div class="muted">Name card: ' + esc(g.card) + '</div>';
     if(g.diet){
@@ -1132,7 +1280,7 @@ footer{color:var(--muted);font-size:13px}
   }
   function place(){
     if(!cur) return;
-    var r = cur.el.getBoundingClientRect(), w = card.offsetWidth, ht = card.offsetHeight;
+    var r = (cur.el.offsetParent || !cur.el2 ? cur.el : cur.el2).getBoundingClientRect(), w = card.offsetWidth, ht = card.offsetHeight;
     var x = Math.max(12, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 12));
     var y = r.top - ht - 12;
     if(y < 12) y = r.bottom + 12;
@@ -1140,10 +1288,15 @@ footer{color:var(--muted);font-size:13px}
   
     card.style.left = x + 'px'; card.style.top = y + 'px';
   }
+  function els(g){ return g.el2 ? [g.el, g.el2] : [g.el]; }
   function mark(g, on){
-    g.el.classList.toggle('cur', on);
+    els(g).forEach(function(e){ e.classList.toggle('cur', on); });
+    if(g.item){
+      if(g.group) items.forEach(function(o){ if(o !== g && o.group === g.group) o.el.classList.toggle('mate', on); });
+      return;
+    }
     if(!g.party) return;
-    order.forEach(function(o){ if(o !== g && o.party === g.party) o.el.classList.toggle('mate', on); });
+    order.forEach(function(o){ if(o !== g && o.party === g.party) els(o).forEach(function(e){ e.classList.toggle('mate', on); }); });
   }
   function show(g){
     if(cur) mark(cur, false);
@@ -1154,23 +1307,27 @@ footer{color:var(--muted);font-size:13px}
     if(cur) mark(cur, false);
     cur = null; pinned = false; card.classList.remove('on');
   }
-  room.addEventListener('pointerover', function(e){
-    var b = e.target.closest('.st'); if(!b || e.pointerType !== 'mouse' || pinned) return;
-    show(byId[b.dataset.id]);
-  });
-  room.addEventListener('pointerout', function(e){
-    var b = e.target.closest('.st'); if(!b || e.pointerType !== 'mouse' || pinned) return;
-    if(!b.contains(e.relatedTarget)) hide();
-  });
-  room.addEventListener('click', function(e){
-    var b = e.target.closest('.st'); if(!b) return;
-    var g = byId[b.dataset.id];
-    if(pinned && cur === g){ hide(); return; }
-    show(g); pinned = true;
-  });
-  room.addEventListener('focusin', function(e){ var b = e.target.closest('.st'); if(b && !pinned) show(byId[b.dataset.id]); });
-  room.addEventListener('focusout', function(e){ if(!pinned && !room.contains(e.relatedTarget)) hide(); });
-  document.addEventListener('click', function(e){ if(pinned && !e.target.closest('.st') && !e.target.closest('#diet-rows')) hide(); });
+  function who(b){ return b.classList.contains('st') ? byId[b.dataset.id] : itemById[b.dataset.id]; }
+  function wire(c){
+    c.addEventListener('pointerover', function(e){
+      var b = e.target.closest('.st, .it'); if(!b || e.pointerType !== 'mouse' || pinned) return;
+      show(who(b));
+    });
+    c.addEventListener('pointerout', function(e){
+      var b = e.target.closest('.st, .it'); if(!b || e.pointerType !== 'mouse' || pinned) return;
+      if(!b.contains(e.relatedTarget)) hide();
+    });
+    c.addEventListener('click', function(e){
+      var b = e.target.closest('.st, .it'); if(!b) return;
+      var g = who(b);
+      if(pinned && cur === g){ hide(); return; }
+      show(g); pinned = true;
+    });
+    c.addEventListener('focusin', function(e){ var b = e.target.closest('.st, .it'); if(b && !pinned) show(who(b)); });
+    c.addEventListener('focusout', function(e){ if(!pinned && !c.contains(e.relatedTarget)) hide(); });
+  }
+  wire(room);
+  document.addEventListener('click', function(e){ if(pinned && !e.target.closest('.st, .it') && !e.target.closest('#diet-rows')) hide(); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hide(); });
   window.addEventListener('scroll', place, {passive:true, capture:true});
   window.addEventListener('resize', place);
@@ -1178,31 +1335,52 @@ footer{color:var(--muted);font-size:13px}
 
   // search and dietary filter
   var q = document.getElementById('seat-q'), dietBtn = document.getElementById('seat-diet'), found = document.getElementById('seat-found');
+  var q2 = document.getElementById('lay-q'), diet2 = document.getElementById('lay-diet'), found2 = document.getElementById('lay-found');
   function norm(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
   order.forEach(function(g){ g.key = norm(g.full + ' ' + g.label + ' ' + (g.card || '')); });
-  function filter(){
+  function filter(src){
+    if(src) q.value = q2.value = src.value;
     var s = norm(q.value.trim()), dOnly = dietBtn.getAttribute('aria-pressed') === 'true', n = 0;
     order.forEach(function(g){
       var hit = !!s && g.key.indexOf(s) > -1;
       if(hit) n++;
-      g.el.classList.toggle('hit', hit);
-      g.el.classList.toggle('dim', (!!s && !hit) || (dOnly && !g.diet));
+      els(g).forEach(function(e){
+        e.classList.toggle('hit', hit);
+        e.classList.toggle('dim', (!!s && !hit) || (dOnly && !g.diet));
+      });
     });
-    found.textContent = s ? (n === 1 ? '1 match' : n + ' matches') : '';
+    items.forEach(function(o){
+      var hit = !!s && o.key.indexOf(s) > -1;
+      if(hit) n++;
+      o.el.classList.toggle('hit', hit);
+      o.el.classList.toggle('dim', !!s && !hit);
+    });
+    found.textContent = found2.textContent = s ? (n === 1 ? '1 match' : n + ' matches') : '';
   }
-  q.addEventListener('input', filter);
-  q.addEventListener('keydown', function(e){
-    if(e.key !== 'Enter') return;
-    var g = order.filter(function(o){ return o.el.classList.contains('hit'); })[0];
-    if(g) focusSeat(g);
+  [q, q2].forEach(function(inp){
+    inp.addEventListener('input', function(){ filter(inp); });
+    inp.addEventListener('keydown', function(e){
+      if(e.key !== 'Enter') return;
+      var g = order.filter(function(o){ return els(o).some(function(x){ return x.classList.contains('hit'); }); })[0];
+      if(inp === q2){
+        var it = items.filter(function(o){ return o.el.classList.contains('hit'); })[0];
+        if(g) setScene('gh'); else if(it) setScene(it.scene);
+        if(!g && it){ focusSeat(it); return; }
+      }
+      if(g) focusSeat(g);
+    });
   });
-  dietBtn.addEventListener('click', function(){
-    dietBtn.setAttribute('aria-pressed', dietBtn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-    filter();
+  [dietBtn, diet2].forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var on = btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true';
+      dietBtn.setAttribute('aria-pressed', on); diet2.setAttribute('aria-pressed', on);
+      filter();
+    });
   });
   function focusSeat(g){
-    g.el.scrollIntoView({block:'center', inline:'center', behavior:'smooth'});
-    g.el.focus({preventScroll:true});
+    var e = g.el.offsetParent || !g.el2 ? g.el : g.el2;
+    e.scrollIntoView({block:'center', inline:'center', behavior:'smooth'});
+    e.focus({preventScroll:true});
     show(g); pinned = true;
   }
 
@@ -1218,6 +1396,196 @@ footer{color:var(--muted);font-size:13px}
     tr.addEventListener('mouseleave', function(){ if(!q.value) g.el.classList.remove('hit'); });
     tb.appendChild(tr);
   });
+
+  // Layout tab: feet, traced from Jo's Oct 15 layouts. Greenhouse is drawn north up, 50' wide and 120' long
+  var SC = {gh:'Greenhouse', bluff:'Bluff'};
+  var KIND = {sh:'Shared rental', tm:'Tent Merchant', own:'Vendor or ours', fix:'Venue', 'new':"Proposed, not on Jo's layout"};
+  var pscroll = document.getElementById('pscroll'), planBox = document.getElementById('planbox'), plans = {};
+  function css(v){ return 'calc(var(--ft)*' + v + '*1px)'; }
+  function put(n, x, y, w, h, rot){
+    n.style.left = css(x); n.style.top = css(y);
+    if(w != null){ n.style.width = css(w); n.style.height = css(h); }
+    if(rot) n.style.transform = 'rotate(' + rot + 'deg)';
+    return n;
+  }
+  function plan(id, w, h){
+    var p = el('div', 'plan');
+    p.style.width = css(w); p.style.height = css(h); p.hidden = id !== 'gh';
+    plans[id] = p; planBox.appendChild(p); wire(p);
+    return p;
+  }
+  function thing(p, scene, d){
+    var b = el('button', 'it ' + d.kind + (d.cls ? ' ' + d.cls : ''), d.label || '');
+    b.type = 'button'; b.dataset.id = d.id; b.setAttribute('aria-label', d.name);
+    if(d.cls && d.cls.indexOf('ch') > -1) b.tabIndex = -1;
+    put(b, d.x, d.y, d.w, d.h, d.rot);
+    var o = {item:1, id:d.id, name:d.name, kind:d.kind, qty:d.qty, note:d.note, scene:scene, group:d.group, el:b, key:norm(d.name + ' ' + (d.note || '') + ' ' + KIND[d.kind])};
+    items.push(o); itemById[d.id] = o; p.appendChild(b);
+    return o;
+  }
+  function deco(p, cls, x, y, w, h, text, rot){ var d = put(el('div', cls, text), x, y, w, h, rot); p.appendChild(d); return d; }
+  function scaleBar(p, ft, y){ var s = put(el('div', 'sbar'), 0, y, ft, null); s.appendChild(el('span', null, ft + ' ft')); s.style.height = ''; p.appendChild(s); }
+
+  // greenhouse
+  var gh = plan('gh', 50, 120);
+  deco(gh, 'wall', 0, 0, 50, 120);
+  deco(gh, 'gap', 18.3, 119.7, 10.7, .6); deco(gh, 'gap', 49.7, 60.7, .6, 3.3); deco(gh, 'gap', -.3, 57.7, .6, 9.1);
+  deco(gh, 'tag', 19.5, 116, null, null, 'Guest entry'); deco(gh, 'tag', 45, 1, null, null, '↑ N');
+  scaleBar(gh, 10, 122);
+  function vlab(p, t, x, y, w, h){ deco(p, 'tlab', x, y, w, h, t); }
+  var T = {
+    1:{x:41.75, y:62.2, segs:'ssss'}, 2:{x:33, y:41, segs:'tt'}, 3:{x:34, y:85, segs:'ss'}, 4:{x:24.5, y:41, segs:'st'},
+    5:{x:25.5, y:85, segs:'ss'}, 6:{x:16, y:41, segs:'ss'}, 7:{x:17, y:85, segs:'ss'}
+  };
+  var TW = 3.33;
+  Object.keys(T).forEach(function(n){
+    var t = T[n], len = 8 * t.segs.length, top = t.y - len / 2;
+    t.segs.split('').forEach(function(k, i){
+      thing(gh, 'gh', {id:'t' + n + '-' + i, kind:k === 's' ? 'sh' : 'tm', name:'Table ' + n + ", 8' banquet", qty:'1', group:'tbl' + n,
+        note:n === '1' ? 'Seats the 35 fruitwood chairs carried from the bluff' : '', x:t.x - TW / 2, y:top + 8 * i, w:TW, h:8});
+    });
+    vlab(gh, 'Table ' + n, t.x - TW / 2, top, TW, len);
+  });
+  var chairs = 0;
+  L.forEach(function(blk){
+    (blk.tables || []).forEach(function(tb){
+      var t = T[tb.n], len = 8 * t.segs.length;
+      function add(id, x, y){
+        var g = byId[id], b = g.el.cloneNode(true);
+        b.style.removeProperty('--i'); if(tb.n === 1) b.classList.add('fw');
+        put(b, x, y); g.el2 = b; gh.appendChild(b); chairs++;
+      }
+      [[ids(tb.top), t.x - TW / 2 - .95], [ids(tb.bot), t.x + TW / 2 + .95]].forEach(function(s){
+        s[0].forEach(function(id, k){ add(id, s[1], t.y + len / 2 - (k + .5) * len / s[0].length); });
+      });
+      [[ids(tb.r), t.y - len / 2 - 1], [ids(tb.l), t.y + len / 2 + 1]].forEach(function(s){
+        s[0].forEach(function(id, k){ add(id, t.x + (s[0].length === 2 ? (k ? .8 : -.8) : 0), s[1]); });
+      });
+    });
+  });
+  [0, 1, 2].forEach(function(i){
+    thing(gh, 'gh', {id:'buf' + i, kind:'tm', name:"Buffet, 8' banquet", qty:'3', group:'buf', note:'Olive full-drop drapes. 150 Lisbon dinner plates stacked at the head', x:4.05, y:4 + 8 * i, w:TW, h:8});
+  });
+  vlab(gh, 'Buffet', 4.05, 4, TW, 24);
+  thing(gh, 'gh', {id:'bar', kind:'sh', name:'Bar (Toscano wood bar)', qty:'1', note:'Full bar, two signature cocktails', label:'BAR', x:19.9, y:8.2, w:8, h:4});
+  thing(gh, 'gh', {id:'backbar', kind:'sh', name:'Back bar tables', qty:'1', note:'Coolers behind the bar, beer and wine coming up from the bluff', x:19.9, y:2.5, w:8, h:4});
+  thing(gh, 'gh', {id:'coffee', kind:'sh', name:'Coffee table', qty:'1', note:'Comes draped. 100-cup coffee urn from Tent Merchant', x:40.4, y:13.5, w:3, h:8});
+  vlab(gh, 'Coffee', 40.4, 13.5, 3, 8);
+  thing(gh, 'gh', {id:'cake', kind:'new', cls:'round', name:'Cake table, 36" round', qty:'1', note:'Shared, with cloth. Placed by the coffee per the Placement tab', label:'Cake', x:40.4, y:23.5, w:3, h:3});
+  [0, 1].forEach(function(i){
+    thing(gh, 'gh', {id:'bev' + i, kind:'new', name:"Beverage station, 6' table", qty:'2', group:'bev', note:'Tent Merchant, olive drape. 3 gal dispensers on crate risers: water, lemonade, N/A margarita', x:4.2, y:28.5 + 7 * i, w:3, h:6});
+    vlab(gh, 'Drinks', 4.2, 28.5 + 7 * i, 3, 6);
+  });
+  thing(gh, 'gh', {id:'dj', kind:'sh', name:"DJ table, 6'", qty:'1', note:"On Jo's reception layout; the Placement tab lists the shared DJ table on the bluff", x:4.2, y:74.2, w:3, h:6});
+  vlab(gh, 'DJ', 4.2, 74.2, 3, 6);
+  thing(gh, 'gh', {id:'band', kind:'own', name:'Band area', note:'Band setup, west of the dance floor', x:7.6, y:58.5, w:2.3, h:6});
+  vlab(gh, 'Band', 7.6, 58.5, 2.3, 6);
+  thing(gh, 'gh', {id:'floor', kind:'sh', name:'Oak dance floor', qty:'28 pieces', note:'Fixed. 15 paper lanterns and a disco ball above (SPARK)', label:'Dance floor', x:15, y:54, w:20, h:15});
+  thing(gh, 'gh', {id:'card', kind:'sh', name:"Card table, 6'", qty:'1', note:'Arrives from the bluff, with the 5 cocktail tables', label:'Card', x:6.2, y:110.25, w:6, h:2.5, rot:40});
+
+  // bluff, measured from the pad's top left; the canvas adds the margin to the west and north
+  var OX = 23.7, OY = 17.4, bl = plan('bluff', 129, 80);
+  function bt(d){ d.x += OX; d.y += OY; return thing(bl, 'bluff', d); }
+  bt({id:'pad', kind:'fix', name:"Ceremony pad, 40' x 40'", note:'Chairs face west toward the ceremony spot', x:0, y:0, w:40, h:40});
+  deco(bl, 'dimh', OX, OY - 3, 40, 0); deco(bl, 'tag', OX + 17, OY - 6, null, null, "40'");
+  deco(bl, 'dimv', OX + 41.5, OY, 0, 40); deco(bl, 'tag', OX + 42.5, OY + 19, null, null, "40'");
+  deco(bl, 'tag', OX + 13, OY + 19, null, null, "5' aisle"); deco(bl, 'tag', OX + 6, OY + 41.5, null, null, "Rows 3' apart");
+  bt({id:'plat', kind:'fix', name:"Ceremony platform, 10' x 10'", note:'West edge of the pad', label:'Ceremony', x:-10, y:15, w:10, h:10});
+  deco(bl, 'zone', OX - 9, OY + 16, 8, 8);
+  bt({id:'singer', kind:'sh', cls:'ch', name:'Singer chair', qty:'1', note:'For Ellie. No umbrella', x:-4.2, y:29.7, w:1.6, h:1.6, rot:45});
+  deco(bl, 'tag', OX - 6, OY + 32, null, null, 'Singer');
+  bt({id:'doves', kind:'own', name:'Doves', note:'Dove release, staged northwest of the pad', label:'Doves', x:-13.4, y:-8, w:7, h:6});
+  // chairs: 16" wide at 18" spacing, 3' between rows, 5' center aisle, 2' margin to the pad edge, shared chairs nearest the aisle
+  var CHAIR = 16 / 12, PITCH = 1.5, ROW = 3, AISLE = 5, ROW0 = 6, PER = 10, ch = 0;
+  for(var r = 0; r < 7; r++){
+    ['n', 's'].forEach(function(side){
+      for(var k = 0; k < PER; k++){
+        var back = r * 2 * PER + (side === 's' ? PER : 0) + k, tm = back >= 105;
+        ch++;
+        bt({id:'c' + ch, kind:tm ? 'tm' : 'sh', cls:'ch', group:tm ? 'chtm' : 'chsh', name:'Ceremony chair, fruitwood', qty:tm ? '35 Tent Merchant' : '105 shared',
+          note:'Row ' + (r + 1) + ' of 7. ' + (tm ? 'Delivered stacked; setup crew sets up. Only one transfer, to table 1 in the greenhouse' : 'Stay on the bluff overnight and after'),
+          x:ROW0 + r * ROW - CHAIR / 2, y:side === 'n' ? 20 - AISLE / 2 - (k + 1) * PITCH + (PITCH - CHAIR) / 2 : 20 + AISLE / 2 + k * PITCH + (PITCH - CHAIR) / 2, w:CHAIR, h:CHAIR});
+      }
+    });
+  }
+  [[33.5, 43.8], [48.8, 42.2], [55.2, 46.6], [25.5, 48.8], [41.4, 48.8]].forEach(function(c, i){
+    bt({id:'ct' + i, kind:'sh', cls:'round', group:'ct', name:'Pedestal cocktail table', qty:'5', note:'With cloth. Move to the greenhouse entry after cocktail hour', x:c[0] - 1.5, y:c[1] - 1.5, w:3, h:3});
+  });
+  deco(bl, 'tag', OX + 33, OY + 46, null, null, 'Cocktail hour');
+  bt({id:'djt', kind:'sh', name:"DJ table, 6'", qty:'1', note:'With umbrella and chair. Stays on the bluff', label:'DJ', x:10.3, y:54.05, w:6, h:2.5});
+  bt({id:'djc', kind:'sh', cls:'ch', name:'DJ chair', qty:'1', x:12.45, y:58.15, w:1.333, h:1.333});
+  bt({id:'umb1', kind:'sh', cls:'round', name:'Cloth market umbrella (DJ)', qty:'1', x:3.25, y:53.75, w:5.5, h:5.5});
+  bt({id:'bar2', kind:'sh', name:'Bar: welcome beverage table', qty:'1', note:'Beer and wine. Comes draped. Coolers, recycling, wine goblets', label:'BAR', x:29.5, y:54.8, w:8, h:3.5});
+  bt({id:'umb2', kind:'sh', cls:'round', name:'Cloth market umbrella (bar)', qty:'1', x:23.25, y:52.65, w:5.5, h:5.5});
+  bt({id:'graze', kind:'sh', name:"Grazing table, 6'", qty:'1', note:'Charcuterie, next to the bar. Comes draped', label:'Grazing', x:48.6, y:52.35, w:6, h:2.5, rot:-22});
+  deco(bl, 'tag', OX + 62, OY + 1.3, null, null, 'Guest drop-off');
+  scaleBar(bl, 20, 82);
+
+  // scenes and zoom
+  var DIM = {gh:[50, 120], bluff:[129, 80]}, scene = 'gh', manual = false;
+  var STAT = {
+    gh:"<span><b>120' x 50'</b>greenhouse</span><span><b>7</b>guest tables</span><span><b>16</b>8' tables</span><span><b>" + chairs + "</b>seats</span>",
+    bluff:"<span><b>40' x 40'</b>pad</span><span><b>" + ch + "</b>chairs</span><span><b>105</b>shared</span><span><b>35</b>Tent Merchant</span>"
+  };
+  function zoom(v, user){
+    var ft = Math.max(1, Math.min(40, v));
+    pscroll.style.setProperty('--ft', ft.toFixed(3)); pscroll.classList.toggle('names', ft >= 21);
+    pscroll.dataset.ft = ft; if(user) manual = true;
+  }
+  function fitWidth(){ var w = pscroll.clientWidth - 34; return w > 0 ? Math.min(30, w / DIM[scene][0]) : 0; }
+  function setScene(id){
+    scene = id; manual = false; hide();
+    Object.keys(plans).forEach(function(k){ plans[k].hidden = k !== id; });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-scene]'), function(b){ b.setAttribute('aria-pressed', b.dataset.scene === id ? 'true' : 'false'); });
+    document.getElementById('lay-stats').innerHTML = STAT[id];
+    var f = fitWidth(); zoom(id === 'gh' ? Math.min(14, f || 14) : f || 8);
+    pscroll.scrollTo(0, 0);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-scene]'), function(b){ b.addEventListener('click', function(){ setScene(b.dataset.scene); }); });
+  document.getElementById('lay-in').addEventListener('click', function(){ zoom(+pscroll.dataset.ft * 1.25, true); });
+  document.getElementById('lay-out').addEventListener('click', function(){ zoom(+pscroll.dataset.ft / 1.25, true); });
+  document.getElementById('lay-fit').addEventListener('click', function(){ zoom(fitWidth(), true); });
+  var lastW = 0;
+  if(window.ResizeObserver) new ResizeObserver(function(){ var w = pscroll.clientWidth; if(w !== lastW && !manual){ lastW = w; setScene(scene); } else lastW = w; }).observe(pscroll);
+  setScene('gh');
+
+  // shuttles: riders come from each party's shuttle answer on the Guest List tab
+  var SEATS = 108, shut = document.getElementById('shuttle-rows'), shutMode = 'all', sq = document.getElementById('shut-q');
+  var PLUS = {jonas:1, wallen:1, dubeck:1};
+  var parts = Object.keys(P).map(function(k){ return {k:k, p:P[k], m:order.filter(function(g){ return g.party === k; }), x:PLUS[k] || 0}; }).filter(function(x){ return x.m.length; });
+  var loose = order.filter(function(g){ return !g.party; });
+  function tablesOf(m){ var t = []; m.forEach(function(g){ if(t.indexOf(g.table) < 0) t.push(g.table); }); return t.sort().join(', '); }
+  function shutRow(name, m, wp, mode, extra){
+    var tr = el('tr'); tr.dataset.mode = mode;
+    tr.dataset.key = norm(name + ' ' + names(m));
+    var chip = mode === 'yes' ? '<span class="chip gh">Shuttle</span>' : mode === 'no' ? '<span class="chip move">Driving</span>' : '<span class="chip off">Not on the list</span>';
+    tr.innerHTML = '<td>' + esc(name) + '<div class="muted">' + names(m) + (extra ? ' + ' + extra + ' not named' : '') + '</div></td><td class="num">' + (m.length + (extra || 0)) + '</td><td class="num">' + tablesOf(m) + '</td><td>' + (wp === 'yes' ? 'Yes' : wp === 'no' ? 'No' : '') + '</td><td>' + chip + '</td>';
+    shut.appendChild(tr);
+  }
+  parts.forEach(function(x){ shutRow(x.p[0], x.m, x.p[3], x.p[4], x.x); });
+  shutRow('Not on the guest list', loose, '', '?');
+  var nRide = 0, nDrive = 0;
+  parts.forEach(function(x){ if(x.p[4] === 'yes') nRide += x.m.length + x.x; else nDrive += x.m.length + x.x; });
+  var couple = order.filter(function(g){ return g.party === 'bs'; }).length;
+  document.getElementById('shut-stats').innerHTML = '<span><b>' + SEATS + '</b>seats</span><span><b>' + nRide + '</b>on the shuttle</span><span><b>' + (SEATS - nRide) + '</b>spare seats</span><span><b>' + nDrive + '</b>driving</span><span><b>' + loose.length + '</b>not on the list</span>';
+  document.getElementById('shut-note').textContent = 'The ' + nRide + ' includes Soraya and Bjorn (' + couple + '). Without them it is ' + (nRide - couple) + ', ' + (SEATS - nRide + couple) + ' under the ' + SEATS + ' seats. Jonas, Sara, and Owen D. each have an unnamed plus one counted on the sheet.';
+  function shutFilter(){
+    var s = norm(sq.value.trim()), n = 0;
+    Array.prototype.forEach.call(shut.children, function(tr){
+      var on = (shutMode === 'all' || tr.dataset.mode === shutMode) && (!s || tr.dataset.key.indexOf(s) > -1);
+      tr.hidden = !on; if(on) n++;
+    });
+    document.getElementById('shut-found').textContent = n + (n === 1 ? ' row' : ' rows');
+  }
+  sq.addEventListener('input', shutFilter);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function(b){
+    b.addEventListener('click', function(){
+      shutMode = b.dataset.mode;
+      Array.prototype.forEach.call(document.querySelectorAll('[data-mode]'), function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+      shutFilter();
+    });
+  });
+  shutFilter();
 })();
 </script>
 </body>
