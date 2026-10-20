@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -105,11 +105,13 @@ s{color:var(--muted)}
 .todos label{display:grid;grid-template-columns:20px 1fr auto;gap:10px;align-items:start;padding:10px 14px;cursor:pointer}
 .todos input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);cursor:pointer}
 .todos input:checked+.txt{color:var(--muted);text-decoration:line-through}
+.todos .meta{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:4px 6px}
+.todos .meta{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:4px 6px}
 .todos .due{font-family:var(--mono);font-size:12px;color:var(--warn);white-space:nowrap;padding-top:2px}
 .todos .sub{margin:0;padding:0 0 6px 30px;list-style:none}
 .todos .sub label{padding:6px 14px}
 .h2d{font-family:var(--body);font-size:14px;font-weight:500}
-@media (max-width:520px){.todos label{grid-template-columns:20px 1fr}.todos .due{grid-column:2}}
+@media (max-width:520px){.todos label{grid-template-columns:20px 1fr}.todos .meta{grid-column:2;justify-content:flex-start}}
 footer{color:var(--muted);font-size:13px}
 @media (max-width:520px){.steps li{grid-template-columns:1fr;gap:2px}}
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
@@ -801,130 +803,156 @@ footer{color:var(--muted);font-size:13px}
 <!-- ============ TO DO ============ -->
 <div class="panel" id="todo" role="tabpanel" aria-labelledby="tab-todo" hidden>
   <section>
-    <h2>Today <span class="muted h2d">Sun Oct 18</span></h2>
+    <h2>Sunday <span class="muted h2d">Oct 18</span></h2>
     <p class="muted"><span id="todo-sync">Checks save in this browser only.</span> <span id="todo-count"></span></p>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="pay-kk"><span class="txt">Pay KK Catering balance</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-bus"><span class="txt">Pay Bill&#39;s Bus balance</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="bus-port"><span class="txt">Check in with Port about Bill&#39;s Bus</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-wappy"><span class="txt">Pay back Wappy for the officiant cost</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="ledger"><span class="txt">Update the ledger and budget</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="diagram"><span class="txt">Send the final diagram to Tent Merchant</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-kk"><span class="txt">Pay KK Catering balance</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-bus"><span class="txt">Pay Bill&#39;s Bus balance</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="bus-port"><span class="txt">Check in with Port about Bill&#39;s Bus</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-wappy"><span class="txt">Pay back Wappy for the officiant cost</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="ledger"><span class="txt">Update the ledger and budget</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="diagram"><span class="txt">Send the final diagram to Tent Merchant</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Monday <span class="muted h2d">Oct 19</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="license"><span class="txt">Get the marriage license</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="license-off"><span class="txt">Get the officiant license</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="shotlist"><span class="txt">Send the shot list to the photographer <span class="n">Draft is on the RUN OF SHOW tab</span></span><span><span class="chip gh">Soraya</span></span></label></li>
-      <li><label><input type="checkbox" data-id="kk-bar"><span class="txt">Check in with KK about what else is needed for the bar to order</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="wildcat"><span class="txt">Call Wildcat</span><span><span class="chip gh">Soraya</span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-6-1"><span class="txt">Write notes for table 6-1</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="license"><span class="txt">Get the marriage license</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="license-off"><span class="txt">Get the officiant license</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="shotlist"><span class="txt">Send the shot list to the photographer <span class="n">Draft is on the RUN OF SHOW tab</span></span><span class="meta"><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="kk-bar"><span class="txt">Check in with KK about what else is needed for the bar to order</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="wildcat"><span class="txt">Call Wildcat</span><span class="meta"><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-6-1"><span class="txt">Write notes for table 6-1</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Tuesday <span class="muted h2d">Oct 20</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="bud-vases"><span class="txt">Pick up bud vases from our friend</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="crew"><span class="txt">Figure out the setup crew for Saturday</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="shuttle-final"><span class="txt">Finalize the shuttles <span class="n">Who is driving, who is on the bus, and return trips; see the Shuttles tab</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-6-2"><span class="txt">Write notes for table 6-2</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="vows-tue"><span class="txt">Work on vows and practice</span><span class="meta"><span class="due">7:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="jeff-doc-meeting"><span class="txt">Document meeting with Jeff</span><span class="meta"><span class="due">8:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="call-jo"><span class="txt">Call with Jo</span><span class="meta"><span class="due">11:00 am</span><span class="chip bluff">Bjorn</span><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="appfolio-deck"><span class="txt">AppFolio finance deck</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="michael-rehearsal"><span class="txt">Check in with Michael about the rehearsal</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="flower-list"><span class="txt">Make the flower shopping list</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="crew"><span class="txt">Figure out the setup crew for Saturday</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="shuttle-final"><span class="txt">Finalize the shuttles <span class="n">Who is driving, who is on the bus, and return trips; see the Shuttles tab</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-6-2"><span class="txt">Write notes for table 6-2</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Wednesday <span class="muted h2d">Oct 21</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="thanks-speech"><span class="txt">Write the thank-you speech for the wedding</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="eucalyptus"><span class="txt">Harvest eucalyptus</span><span><span class="chip gh">Soraya</span></span></label></li>
-      <li><label><input type="checkbox" data-id="flowers-design"><span class="txt">Design the flowers</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-5-1"><span class="txt">Write notes for table 5-1</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-twine"><span class="txt">Allocate the pens and tie the notes with twine</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="airport-tori-jack"><span class="txt">Pick up Tori from the airport <span class="n">UA671 lands at 1:02 pm</span></span><span class="due">1:02 pm</span></label></li>
+      <li><label><input type="checkbox" data-id="vows-wed"><span class="txt">Work on vows and practice</span><span class="meta"><span class="due">7:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="thanks-speech"><span class="txt">Write the thank-you speech for the wedding</span><span class="meta"><span class="chip bluff">Bjorn</span><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="eucalyptus"><span class="txt">Harvest eucalyptus</span><span class="meta"><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-5-1"><span class="txt">Write notes for table 5-1</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-twine"><span class="txt">Allocate the pens and tie the notes with twine</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="airport-tori-jack"><span class="txt">Pick up Tori from the airport <span class="n">UA671 lands at 1:02 pm</span></span><span class="meta"><span class="due">1:02 pm</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="bud-vases"><span class="txt">Pick up bud vases from Kelly</span><span class="meta"><span class="chip move">Thor &amp; Barbie</span></span></label></li>
+      <li><label><input type="checkbox" data-id="airbnb"><span class="txt">Check in to the Airbnb</span><span class="meta"><span class="due">4:00 pm</span><span class="chip move">Thor &amp; Barbie</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Thursday <span class="muted h2d">Oct 22</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="welcome-speech"><span class="txt">Write the welcome speech for the welcome party</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="flowers"><span class="txt">Wholesaler trip for flowers <span class="n">Bring snippers and buckets. About 50 white dahlias and about 45 tall white flowers (first choice stock, then snapdragons, larkspur/delphinium, veronica)</span></span><span class="due">8:00 am</span></label></li>
-      <li><label><input type="checkbox" data-id="flowers-recut"><span class="txt">Recut the stems and put everything in buckets of water</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="andreas"><span class="txt">Pick up Andreas from the airbus, then take him to the harbor</span><span class="due">1:00 pm</span></label></li>
-      <li><label><input type="checkbox" data-id="drinks"><span class="txt">Get beer for the welcome party, and N/A drinks and sparkling water for the wedding <span class="n">Athletic N/A beer, N/A margarita, sparkling water, lemonade</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="placard-base"><span class="txt">Get a base for the seating chart sign</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="signs"><span class="txt">Finish signage <span class="n">Restroom signs, guest book, card box, reserved family seats; Tori&#39;s extra table numbers</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="notes-5-2"><span class="txt">Write notes for table 5-2</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="dinner-thu"><span class="txt">Dinner at Soraya&#39;s dad&#39;s house</span><span class="due">5:00 pm</span></label></li>
-      <li><label><input type="checkbox" data-id="airport-jack"><span class="txt">Pick up Jack from the airport</span><span class="due">Night</span></label></li>
+      <li><label><input type="checkbox" data-id="vows-thu"><span class="txt">Work on vows and practice</span><span class="meta"><span class="due">7:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="welcome-speech"><span class="txt">Write the welcome speech for the welcome party</span><span class="meta"><span class="chip bluff">Bjorn</span><span class="chip gh">Soraya</span></span></label></li>
+      <li><label><input type="checkbox" data-id="flowers"><span class="txt">Wholesaler trip for flowers <span class="n">About 50 white dahlias and about 45 tall white flowers (first choice stock, then snapdragons, larkspur/delphinium, veronica). Drop them off at Morgan&#39;s house.</span></span><span class="meta"><span class="due">8:00 am</span><span class="chip gh">Soraya</span></span></label>
+        <ul class="sub">
+          <li><label><input type="checkbox" data-id="flowers-pack-tub"><span class="txt">Pack a tub</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="flowers-pack-snippers"><span class="txt">Pack the snippers</span><span class="meta"></span></label></li>
+        </ul>
+      </li>
+      <li><label><input type="checkbox" data-id="flowers-recut"><span class="txt">Recut the stems and put everything in buckets of water</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="andreas"><span class="txt">Pick up Andreas from the airbus, then take him to the harbor</span><span class="meta"><span class="due">1:00 pm</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="shop-welcome"><span class="txt">Shop for the welcome party</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label>
+        <ul class="sub">
+          <li><label><input type="checkbox" data-id="shop-welcome-beer"><span class="txt">Beer</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="shop-welcome-na-beer"><span class="txt">N/A beer</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="shop-welcome-ice"><span class="txt">Ice</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="shop-welcome-sparkling"><span class="txt">Sparkling water</span><span class="meta"></span></label></li>
+        </ul>
+      </li>
+      <li><label><input type="checkbox" data-id="shop-wedding"><span class="txt">Shop for the wedding</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label>
+        <ul class="sub">
+          <li><label><input type="checkbox" data-id="shop-wedding-na-beer"><span class="txt">N/A beer</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="shop-wedding-sparkling"><span class="txt">Sparkling water</span><span class="meta"></span></label></li>
+        </ul>
+      </li>
+      <li><label><input type="checkbox" data-id="placard-base"><span class="txt">Get a base for the seating chart sign</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="signs"><span class="txt">Finish signage <span class="n">Restroom signs, guest book, card box, reserved family seats; Tori&#39;s extra table numbers</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="notes-5-2"><span class="txt">Write notes for table 5-2</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="dinner-thu"><span class="txt">Dinner at Soraya&#39;s dad&#39;s house</span><span class="meta"><span class="due">5:00 pm</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="airport-jack"><span class="txt">Pick up Jack from the airport</span><span class="meta"><span class="due">Night</span><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Friday <span class="muted h2d">Oct 23</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="uhaul"><span class="txt">Pick up the U-Haul</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="boat"><span class="txt">Take the boat to the harbor</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="house"><span class="txt">Set up the house for the welcome party</span><span></span></label>
+      <li><label><input type="checkbox" data-id="vows-fri"><span class="txt">Work on vows and practice</span><span class="meta"><span class="due">7:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="uhaul"><span class="txt">Pick up the U-Haul</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="boat"><span class="txt">Take the boat to the harbor</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="house"><span class="txt">Set up the house for the welcome party</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label>
         <ul class="sub">
-          <li><label><input type="checkbox" data-id="house-lights"><span class="txt">Hang string lights</span><span><span class="chip gh">Soraya</span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-leaves"><span class="txt">Blow leaves</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-toilet"><span class="txt">Receive the restroom trailer <span class="n">VIP Restroom</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-move-tables"><span class="txt">Move tables</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-tables"><span class="txt">Set up tables and linens <span class="n">4 high-tops from Lisa White</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-furniture"><span class="txt">Set out the outdoor furniture</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-bar"><span class="txt">Ice down the beer and wine; set out cups <span class="n">24 bottles of Alamati</span></span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-charcuterie"><span class="txt">Set out charcuterie</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-speaker"><span class="txt">Bluetooth speaker and playlist</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-cornhole"><span class="txt">Set up corn hole</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-sign"><span class="txt">Put out the welcome sign</span><span></span></label></li>
-          <li><label><input type="checkbox" data-id="house-trash"><span class="txt">Trash and recycling bins</span><span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-lights"><span class="txt">Hang string lights</span><span class="meta"><span class="chip gh">Soraya</span></span></label></li>
+          <li><label><input type="checkbox" data-id="house-leaves"><span class="txt">Blow leaves</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-toilet"><span class="txt">Receive the restroom trailer <span class="n">VIP Restroom</span></span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-move-tables"><span class="txt">Move tables</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-tables"><span class="txt">Set up tables and linens <span class="n">4 high-tops from Lisa White</span></span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-furniture"><span class="txt">Set out the outdoor furniture</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-bar"><span class="txt">Ice down the beer and wine; set out cups <span class="n">24 bottles of Alamati</span></span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-charcuterie"><span class="txt">Set out charcuterie</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-speaker"><span class="txt">Bluetooth speaker and playlist</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-sign"><span class="txt">Put out the welcome sign</span><span class="meta"></span></label></li>
+          <li><label><input type="checkbox" data-id="house-trash"><span class="txt">Trash and recycling bins</span><span class="meta"></span></label></li>
         </ul>
       </li>
-      <li><label><input type="checkbox" data-id="wp-charc"><span class="txt">Buy charcuterie</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="arrange"><span class="txt">Build the centerpieces with friends <span class="n">With Morgan. 16 tables, about 5 bud vases each</span></span><span><span class="chip gh">Soraya</span></span></label></li>
-      <li><label><input type="checkbox" data-id="kit"><span class="txt">Pack the day-of kit <span class="n">Rings, vows, speech, vendor tip envelopes, wine and bottle openers, card box</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="dinner-fri"><span class="txt">Dinner at Bouchon</span><span class="due">4:30 to 6:30 pm</span></label></li>
+      <li><label><input type="checkbox" data-id="wp-charc"><span class="txt">Buy charcuterie</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="arrange"><span class="txt">Build the centerpieces with friends <span class="n">16 tables, about 5 bud vases each</span></span><span class="meta"><span class="chip move">Morgan</span></span></label></li>
+      <li><label><input type="checkbox" data-id="kit"><span class="txt">Pack the day-of kit <span class="n">Rings, vows, speech, vendor tip envelopes, wine and bottle openers, card box</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="dinner-fri"><span class="txt">Dinner at Bouchon</span><span class="meta"><span class="due">4:30 to 6:30 pm</span><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Wedding day <span class="muted h2d">Sat Oct 24</span></h2>
     <p class="muted">The work timeline is on Overview and the teardown checklist is on Placement.</p>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="place-centerpieces"><span class="txt">Place the centerpieces on the tables</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="return-vases"><span class="txt">Return the bud vases after the wedding</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="place-centerpieces"><span class="txt">Place the centerpieces on the tables</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="return-vases"><span class="txt">Return the bud vases after the wedding</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>Not yet scheduled <span class="muted h2d"></span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="vows"><span class="txt">Write vows</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pens"><span class="txt">Finish the pens</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="rsvp-email"><span class="txt">Send the info email to everyone confirming their RSVP details</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-tm"><span class="txt">Pay the Tent Merchant balance</span><span class="due">Sat Oct 17, noon</span></label></li>
-      <li><label><input type="checkbox" data-id="pay-tj"><span class="txt">Pay Thomas &amp; Jocelyn for shared rentals <span class="n">Not on the vendor payment schedule yet</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="pay-spark"><span class="txt">Confirm the SPARK payment <span class="n">Not on the vendor payment schedule</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="dp-deposit"><span class="txt">Check the Dos Pueblos security deposit <span class="n">The sheet shows it unpaid; it was due Aug 24</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="bouchon"><span class="txt">Follow up on Friday Bouchon RSVPs <span class="n">17 of 38 confirmed</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="move-crew"><span class="txt">Line up the move crew for cocktail hour <span class="n">Loads chairs, cocktail tables, and trash cans into the truck and U-Haul</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="caterer-tasks"><span class="txt">Go over the work timeline with the caterer <span class="n">Confirm the tasks tagged Servers, Bartenders, and Kitchen on Overview</span></span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="vendor-times"><span class="txt">Confirm vendor arrival times <span class="n">Catering, DJ, Spread Eagle, shuttles, photographer</span></span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="vows"><span class="txt">Write vows</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pens"><span class="txt">Finish the pens</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="rsvp-email"><span class="txt">Send the info email to everyone confirming their RSVP details</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tm"><span class="txt">Pay the Tent Merchant balance</span><span class="meta"><span class="due">Sat Oct 17, noon</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-tj"><span class="txt">Pay Thomas &amp; Jocelyn for shared rentals <span class="n">Not on the vendor payment schedule yet</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pay-spark"><span class="txt">Confirm the SPARK payment <span class="n">Not on the vendor payment schedule</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="dp-deposit"><span class="txt">Check the Dos Pueblos security deposit <span class="n">The sheet shows it unpaid; it was due Aug 24</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="bouchon"><span class="txt">Follow up on Friday Bouchon RSVPs <span class="n">17 of 38 confirmed</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="move-crew"><span class="txt">Line up the move crew for cocktail hour <span class="n">Loads chairs, cocktail tables, and trash cans into the truck and U-Haul</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="caterer-tasks"><span class="txt">Go over the work timeline with the caterer <span class="n">Confirm the tasks tagged Servers, Bartenders, and Kitchen on Overview</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="vendor-times"><span class="txt">Confirm vendor arrival times <span class="n">Catering, DJ, Spread Eagle, shuttles, photographer</span></span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
   <section>
     <h2>After <span class="muted h2d">Sun Oct 25 to Mon Oct 26</span></h2>
     <ul class="todos">
-      <li><label><input type="checkbox" data-id="costco"><span class="txt">Costco run for coffee and pastries</span><span class="due">Sun, 9:00 am</span></label></li>
-      <li><label><input type="checkbox" data-id="starbucks"><span class="txt">Order 4 travelers from Starbucks</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="coffee-house"><span class="txt">Coffee and pastries at our house <span class="n">Guests at the house</span></span><span class="due">Sun, 10 am to 12</span></label></li>
-      <li><label><input type="checkbox" data-id="boat-pickup"><span class="txt">Pick up the boat from the harbor</span><span class="due">Sun</span></label></li>
-      <li><label><input type="checkbox" data-id="pickup"><span class="txt">Tent Merchant pick-up <span class="n">Teardown checklist is on Placement</span></span><span class="due">Mon, 8 am to 5 pm</span></label></li>
-      <li><label><input type="checkbox" data-id="return-uhaul"><span class="txt">Return the U-Haul</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras</span><span></span></label></li>
-      <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards</span><span></span></label></li>
+      <li><label><input type="checkbox" data-id="costco"><span class="txt">Costco run for coffee and pastries</span><span class="meta"><span class="due">Sun, 9:00 am</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="starbucks"><span class="txt">Order 4 travelers from Starbucks</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="coffee-house"><span class="txt">Coffee and pastries at our house <span class="n">Guests at the house</span></span><span class="meta"><span class="due">Sun, 10 am to 12</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="boat-pickup"><span class="txt">Pick up the boat from the harbor</span><span class="meta"><span class="due">Sun</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="pickup"><span class="txt">Tent Merchant pick-up <span class="n">Teardown checklist is on Placement</span></span><span class="meta"><span class="due">Mon, 8 am to 5 pm</span><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="return-uhaul"><span class="txt">Return the U-Haul</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="cameras"><span class="txt">Develop the disposable cameras</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
+      <li><label><input type="checkbox" data-id="thank-you-cards"><span class="txt">Send thank-you cards</span><span class="meta"><span class="chip bluff">Bjorn</span></span></label></li>
     </ul>
   </section>
 </div>
 
-<footer>Last updated Oct 18, 2026.</footer>
+<footer>Last updated Oct 20, 2026.</footer>
 </div>
 
 <script>
